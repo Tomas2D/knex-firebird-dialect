@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Knex Firebird Dialect Filtering 1`] = `
+Array [
+  Object {
+    "id": 2,
+    "role": "user",
+    "user_name": "Adam",
+  },
+]
+`;
+
+exports[`Knex Firebird Dialect Insert data into tables 1`] = `
+Array [
+  Object {
+    "id": 1,
+    "role": "user",
+    "user_name": "Tomáš 😎",
+  },
+  Object {
+    "id": 2,
+    "role": "user",
+    "user_name": "Adam",
+  },
+  Object {
+    "id": 3,
+    "role": "user",
+    "user_name": "Lucas",
+  },
+]
+`;
+
+exports[`Knex Firebird Dialect Insert data into tables 2`] = `
+Array [
+  Object {
+    "account_name": "knex",
+    "id": 101,
+    "user_id": 1,
+  },
+]
+`;
+
+exports[`Knex Firebird Dialect Left join 1`] = `
+Array [
+  Object {
+    "account": "knex",
+    "user_name": "Tomáš 😎",
+  },
+]
+`;
+
+exports[`Knex Firebird Dialect Test limits 1`] = `
+Array [
+  Object {
+    "id": 3,
+    "role": "user",
+    "user_name": "Lucas",
+  },
+]
+`;
+
+exports[`Test Node Firebird Simple select 1`] = `
+Array [
+  Object {
+    "constant": 1,
+  },
+]
+`;

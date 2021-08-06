@@ -1,0 +1,64 @@
+{
+  "name": "knex-firebird-dialect",
+  "version": "1.0.0",
+  "description": "Knex dialect for Firebird",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "jest",
+    "prepublishOnly": "yarn run babel",
+    "lint": "eslint --fix \"{src,tests}/**/*.js\"",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "changelog": "npx run gitmoji-changelog",
+    "release": "yarn version",
+    "version": "yarn changelog && code --wait CHANGELOG.md && git add README.md CHANGELOG.md"
+  },
+  "keywords": [
+    "node",
+    "firebird",
+    "sql",
+    "knex",
+    "orm"
+  ],
+  "author": "Tomáš Dvořák <toomas2d@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Tomas2D/knex-firebird-dialect#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tomas2D/knex-firebird-dialect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tomas2D/knex-firebird-dialect/issues"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.6",
+    "@rauschma/stringio": "^1.4.0",
+    "debug": "^4.1.1",
+    "lodash": "^4.17.15",
+    "wtfnode": "^0.9.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.7",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
+    "knex": "^0.95.9",
+    "node-firebird": "https://github.com/hgourvest/node-firebird#master",
+    "prettier": "^2.2.1"
+  },
+  "peerDependencies": {
+    "knex": "^0.95.9",
+    "node-firebird": "*"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && yarn format"
+    }
+  }
+}
