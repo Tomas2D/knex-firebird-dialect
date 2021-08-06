@@ -60,5 +60,8 @@
     "hooks": {
       "pre-commit": "yarn lint && yarn format"
     }
-  }
+  },
+  "files": [
+    "lib/index.js"
+  ]
 }
