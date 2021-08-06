@@ -9,8 +9,8 @@ const knexConfig = {
   connection: {
     host: "127.0.0.1",
     port: 3050,
-    user: "SYSDBA",
-    password: "masterkey",
+    user: process.env.ISC_USER || "SYSDBA",
+    password: process.env.ISC_PASSWORD || "masterkey",
     database: path.join(
       process.cwd(),
       `firebird-knex-dialect-${Date.now()}.fdb`
@@ -27,6 +27,8 @@ describe("Test Node Firebird", () => {
 
   beforeAll((done) => {
     Firebird.attachOrCreate(knexConfig.connection, (err, db) => {
+      expect(err).toBeUndefined();
+
       fb = db;
       done();
     });

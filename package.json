@@ -54,7 +54,7 @@
   },
   "peerDependencies": {
     "knex": "^0.95.9",
-    "node-firebird": "*"
+    "node-firebird": "https://github.com/hgourvest/node-firebird#master"
   },
   "husky": {
     "hooks": {

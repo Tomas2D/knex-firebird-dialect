@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -8,20 +8,40 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        os: [ubuntu-18.04]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+
+    - name: Install dependencies
+      uses: borales/actions-yarn@v2.3.0
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - run: yarn build
-    - run: yarn test
+        cmd: install --frozen-lockfile
+
+    - name: Build
+      uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: build
+
+    - name: Install Firebird
+      run: |
+        sudo apt-get install libtommath1
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libtommath.so.1.0.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
+        wget -nv -O Firebird-3.0.7.33374-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/R3_0_7/Firebird-3.0.7.33374-0.amd64.tar.gz"
+        tar xzvf Firebird-3.0.7.33374-0.amd64.tar.gz
+        (cd Firebird-3.0.7.33374-0.amd64; sudo ./install.sh -silent)
+        sudo usermod -a -G firebird `whoami`
+        echo 'WireCrypt = Enabled' | sudo tee -a /opt/firebird/firebird.conf > /dev/null
+        sudo killall firebird
+        sudo systemctl start firebird-superserver.service
+        sudo chown root:firebird /opt/firebird/SYSDBA.password
+        sudo chmod 440 /opt/firebird/SYSDBA.password
+        sudo chown -R firebird:firebird .
+    - name: Tests
+      run: |
+        sg firebird -c "yarn global add env-cmd; env-cmd -f /opt/firebird/SYSDBA.password yarn test"
