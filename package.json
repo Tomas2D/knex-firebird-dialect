@@ -6,10 +6,10 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "jest",
-    "prepublishOnly": "yarn run babel",
+    "prepublishOnly": "yarn run build",
     "lint": "eslint --fix \"{src,tests}/**/*.js\"",
     "format": "prettier --write \"src/**/*.ts\"",
-    "changelog": "npx run gitmoji-changelog",
+    "changelog": "npx gitmoji-changelog",
     "release": "yarn version",
     "version": "yarn changelog && code --wait CHANGELOG.md && git add README.md CHANGELOG.md"
   },
