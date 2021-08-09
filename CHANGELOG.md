@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="1.1.0"></a>
+## 1.1.0 (2021-08-09)
+
+### Changed
+
+- ♻️ Do not auto convert blobs to strings [[50b75c6](https://github.com/Tomas2D/knex-firebird-dialect/commit/50b75c6934ed8c8737f970f85f30adaf1f770f51)]
+
+### Miscellaneous
+
+- 🗑️ Remove unused dependencies [[dbf76ae](https://github.com/Tomas2D/knex-firebird-dialect/commit/dbf76ae1cfafcb292ad4e668e4deecc14557104b)]
+
+
 <a name="1.0.1"></a>
 ## 1.0.1 (2021-08-06)
 
