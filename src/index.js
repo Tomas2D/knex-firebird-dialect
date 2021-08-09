@@ -1,5 +1,5 @@
 import { defaults, map } from "lodash";
-import { readableToString } from "@rauschma/stringio";
+import getStream from "get-stream";
 
 import assert from "assert";
 import Client from "knex/lib/client";
@@ -11,6 +11,7 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
+import { toArrayFromPrimitive } from "./utils";
 
 class Client_Firebird extends Client {
   _driver() {
@@ -129,7 +130,7 @@ class Client_Firebird extends Client {
   }
 
   // Ensures the response is returned in the same format as other clients.
-  processResponse(obj, runner) {
+  async processResponse(obj, runner) {
     if (!obj) {
       return;
     }
@@ -139,8 +140,7 @@ class Client_Firebird extends Client {
     }
 
     const [rows, fields] = response;
-    this._fixBufferStrings(rows, fields);
-    this._fixBlobCallbacks(rows, fields);
+    await this._fixBlobCallbacks(rows, fields);
 
     switch (method) {
       case "first":
@@ -152,78 +152,38 @@ class Client_Firebird extends Client {
     }
   }
 
-  _fixBufferStrings(rows, fields) {
-    if (!rows) {
-      return rows;
-    }
-
-    for (const row of Array.isArray(rows) ? rows : [rows]) {
-      for (const cell in row) {
-        const value = row[cell];
-        if (Buffer.isBuffer(value)) {
-          for (const field of fields) {
-            if (
-              field.alias.toUpperCase() === cell.toUpperCase() &&
-              (field.type === 448 || field.type === 452)
-            ) {
-              // SQLVarString
-              row[cell] = value.toString("utf8");
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
   /**
-   * The Firebird library returns BLOLs with callback functions; Those need to be loaded asynchronously
+   * The Firebird library returns BLOBs with callback function, convert to buffer
    * @param {*} rows
    * @param {*} fields
    */
-  _fixBlobCallbacks(rows /*, fields */) {
+  async _fixBlobCallbacks(rows /* fields */) {
     if (!rows) {
       return rows;
     }
 
     const blobEntries = [];
 
-    // Seek and verify if there is any BLOB
-    for (const row of Array.isArray(rows) ? rows : [rows]) {
-      for (const cell in row) {
-        const value = row[cell];
-        // ATSTODO: Está presumindo que o blob é texto; recomenda-se diferenciar texto de binário. Talvez o "fields" ajude?
-        // Is it a callback BLOB?
-        if (value instanceof Function) {
+    toArrayFromPrimitive(rows).forEach((row, rowIndex) => {
+      Object.entries(row).forEach(([colKey, colVal]) => {
+        if (colVal instanceof Function) {
           blobEntries.push(
-            new Promise((resolve, reject) => {
-              value((err, name, stream) => {
-                if (err) {
-                  reject(err);
-                  return;
-                }
-
-                // ATSTODO: Ver como fazer quando o string não tiver o "setEncoding()"
-                if (!stream["setEncoding"]) {
-                  stream["setEncoding"] = () => undefined;
-                }
-
-                // ATSTODO: Não está convertendo os cadacteres acentuados corretamente, mesmo informando a codificação
-                readableToString(stream, "none")
-                  .then((blobString) => {
-                    row[cell] = blobString;
-                    resolve();
-                  })
-                  .catch((err) => {
-                    reject(err);
-                  });
+            new Promise((resolve) => {
+              colVal((err, name, emitter) => {
+                getStream.buffer(emitter).then((buffer) => {
+                  rows[rowIndex][colKey] = buffer;
+                  resolve();
+                });
               });
             })
           );
         }
-      }
-    }
-    // Returns a Promise that wait BLOBs be loaded and returns it
-    return Promise.all(blobEntries).then(() => rows);
+      });
+    });
+
+    await Promise.all(blobEntries);
+
+    return rows;
   }
 
   validateConnection(db) {
