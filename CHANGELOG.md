@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="1.1.1"></a>
+## 1.1.1 (2021-08-10)
+
+### Changed
+
+- 🎨 Use @babel/eslint-parser [[e9a5fac](https://github.com/Tomas2D/knex-firebird-dialect/commit/e9a5fac270f2e0712fa6aaf91df963d974fb437d)]
+
+
 <a name="1.1.0"></a>
 ## 1.1.0 (2021-08-09)
 
