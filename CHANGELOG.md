@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="1.1.2"></a>
+## 1.1.2 (2021-08-10)
+
+### Changed
+
+- 🔧 Add .nvmrc [[8af2fb3](https://github.com/Tomas2D/knex-firebird-dialect/commit/8af2fb360f7a96a49a59b37a431d2d11d0a47bac)]
+
+### Fixed
+
+- 🐛 Auto convert varchar from buffer to string [[4344570](https://github.com/Tomas2D/knex-firebird-dialect/commit/434457055b597978e0c8b61dc3b90cb0cdb409bb)]
+
+
 <a name="1.1.1"></a>
 ## 1.1.1 (2021-08-10)
 
