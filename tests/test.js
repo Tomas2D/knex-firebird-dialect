@@ -123,7 +123,6 @@ describe("Knex Firebird Dialect", () => {
       .insert({ id: 101, account_name: "knex", user_id: 1 });
 
     const users = await knex.select("*").from("users");
-    console.info(users);
     expect(users).toMatchSnapshot();
 
     const accounts = await knex.select("*").from("accounts");

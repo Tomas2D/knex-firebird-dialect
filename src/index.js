@@ -177,6 +177,8 @@ class Client_Firebird extends Client {
               });
             })
           );
+        } else if (colVal instanceof Buffer) {
+          rows[rowIndex][colKey] = colVal.toString("utf8");
         }
       });
     });
