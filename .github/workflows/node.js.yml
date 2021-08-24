@@ -43,6 +43,16 @@ jobs:
         sudo chown root:firebird /opt/firebird/SYSDBA.password
         sudo chmod 440 /opt/firebird/SYSDBA.password
         sudo chown -R firebird:firebird .
+
     - name: Tests
       run: |
+        sudo mkdir coverage
+        sudo chown -R firebird:firebird coverage
+        sudo chmod 777 coverage
         sg firebird -c "yarn global add env-cmd; env-cmd -f /opt/firebird/SYSDBA.password yarn test"
+
+    - name: Test Coverage
+      uses: artiomtr/jest-coverage-report-action@v2.0-rc.4
+      with:
+        coverage-file: ./coverage/coverage-final.json
+        base-coverage-file: ./coverage/coverage-final.json
