@@ -89,38 +89,49 @@ describe("Knex Firebird Dialect", () => {
   });
 
   it("Insert data into tables", async () => {
-    await knex
-      .returning("id")
-      .insert({
-        id: 1,
-        user_name: "Tomáš 😎",
-        role: "user",
-        binary_data: Buffer.from("Binary data for Tomáš 😎"),
-      })
-      .into("users");
+    await new Promise((resolve) =>
+      knex.transaction(async (rtx) => {
+        await knex
+          .transacting(rtx)
+          .returning("id")
+          .insert({
+            id: 1,
+            user_name: "Tomáš 😎",
+            role: "user",
+            binary_data: Buffer.from("Binary data for Tomáš 😎"),
+          })
+          .into("users");
 
-    await knex
-      .returning("user_name")
-      .insert({
-        id: 2,
-        user_name: "Adam",
-        role: "user",
-        binary_data: Buffer.from("Binary data for Adam"),
-      })
-      .into("users");
-    await knex
-      .returning("role")
-      .insert({
-        id: 3,
-        user_name: "Lucas",
-        role: "user",
-        binary_data: Buffer.from("Binary data for Lucas"),
-      })
-      .into("users");
+        await knex
+          .transacting(rtx)
+          .returning("user_name")
+          .insert({
+            id: 2,
+            user_name: "Adam",
+            role: "user",
+            binary_data: Buffer.from("Binary data for Adam"),
+          })
+          .into("users");
+        await knex
+          .transacting(rtx)
+          .returning("role")
+          .insert({
+            id: 3,
+            user_name: "Lucas",
+            role: "user",
+            binary_data: Buffer.from("Binary data for Lucas"),
+          })
+          .into("users");
 
-    await knex
-      .table("accounts")
-      .insert({ id: 101, account_name: "knex", user_id: 1 });
+        await knex
+          .transacting(rtx)
+          .table("accounts")
+          .insert({ id: 101, account_name: "knex", user_id: 1 });
+
+        rtx.commit();
+        resolve();
+      })
+    );
 
     const users = await knex.select("*").from("users");
     expect(users).toMatchSnapshot();
@@ -247,5 +258,16 @@ Array [
 
     await expect(knex.schema.hasTable("accounts")).resolves.toBe(false);
     await expect(knex.schema.hasTable("users")).resolves.toBe(false);
+  });
+
+  it("Transaction - not implemented parts", (done) => {
+    knex.transaction((rtx) => {
+      expect(rtx.savepoint).rejects.toThrow(
+        new Error("savepoints not implemented")
+      );
+
+      rtx.commit();
+      done();
+    });
   });
 });
