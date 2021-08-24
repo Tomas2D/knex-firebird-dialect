@@ -38,8 +38,8 @@ class Transaction_Firebird extends Transaction {
   query(conn, method, status, value) {
     const q = new Promise((resolve, reject) => {
       const transaction = conn._transaction;
-      delete conn._transaction;
       transaction[method]((error) => {
+        delete conn._transaction;
         if (error) return reject(error);
         resolve();
       });
@@ -50,7 +50,7 @@ class Transaction_Firebird extends Transaction {
         this._completed = true;
         debug("%s error running transaction query", this.txid);
       })
-      .tap(() => {
+      .then(() => {
         if (status === 1) this._resolver(value);
         if (status === 2) this._rejecter(value);
       });
