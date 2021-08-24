@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="1.1.4"></a>
+## 1.1.4 (2021-08-24)
+
+### Changed
+
+- 💬 Update README [[0dfef77](https://github.com/Tomas2D/knex-firebird-dialect/commit/0dfef778342c878fcd38712c89257fad8841987f)]
+
+### Miscellaneous
+
+-  👷 Package release on npm [[a1683f0](https://github.com/Tomas2D/knex-firebird-dialect/commit/a1683f0d53f37959723df0e5e3ad71470e1be71b)]
+-  👷 Add test coverage into github actions [[7c5ce38](https://github.com/Tomas2D/knex-firebird-dialect/commit/7c5ce38b41e943ae646b9a50bbf3d286a04a78bb)]
+-  👷 Add test coverage into github actions [[ae206ec](https://github.com/Tomas2D/knex-firebird-dialect/commit/ae206ecd76fae517978fa6f9cc219b683da02aa8)]
+
+
 <a name="1.1.3"></a>
 ## 1.1.3 (2021-08-24)
 
