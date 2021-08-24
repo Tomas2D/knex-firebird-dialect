@@ -1,5 +1,22 @@
 # Changelog
 
+<a name="1.1.3"></a>
+## 1.1.3 (2021-08-24)
+
+### Added
+
+- ✅ Add test coverage [[42bea42](https://github.com/Tomas2D/knex-firebird-dialect/commit/42bea427b4c333e93568f89c1c647df8e6cbad4d)]
+
+### Changed
+
+- ⬆️ Upgrade deps [[70c9b18](https://github.com/Tomas2D/knex-firebird-dialect/commit/70c9b18d8f19ac155ae9aa9d64a97c1802b0beed)]
+- 🔧 Update jest config, update pipeline timeout [[db9258a](https://github.com/Tomas2D/knex-firebird-dialect/commit/db9258aa83319b8d53122aa0f0495e299b3bd1e8)]
+
+### Fixed
+
+- 🐛 Fix query on transaction [[9f7199f](https://github.com/Tomas2D/knex-firebird-dialect/commit/9f7199f6a6ce9d325f9402741f0aa848aa29e5fe)]
+
+
 <a name="1.1.2"></a>
 ## 1.1.2 (2021-08-10)
 
