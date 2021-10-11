@@ -55,6 +55,9 @@
   "peerDependencies": {
     "knex": "^0.95.9"
   },
+  "resolutions": {
+    "set-value": ">=4.0.1"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint && yarn format"
