@@ -1,5 +1,12 @@
 # Changelog
 
+<a name="1.1.5"></a>
+## 1.1.5 (2021-10-11)
+
+### Changed
+
+- ⬆️ Upgrade dependencies to fix security issues [[8fc7dd8](https://github.com/Tomas2D/knex-firebird-dialect/commit/8fc7dd8b6c451cccb53a06964f7ce4f77d3d7757)]
+
 <a name="1.1.4"></a>
 ## 1.1.4 (2021-08-24)
 
