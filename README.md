@@ -44,4 +44,6 @@ const knexConfig = {
 };
 ```
 
+**Notice**: if you using CommonJS require, do not forget to use the default import. `const knexFirebirdDialect = require("knex-firebird-dialect").default`;
+
 For more look at the `tests` folder.
