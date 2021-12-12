@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="1.1.6"></a>
+## 1.1.6 (2021-12-12)
+
+### Changed
+
+- ⬆️ Update dependencies [[13548e8](https://github.com/Tomas2D/knex-firebird-dialect/commit/13548e88aee1a69c8bc3f7331595f404c9096346)]
+- ⬆️ Upgrade node-firebird (driver) [[fcea29a](https://github.com/Tomas2D/knex-firebird-dialect/commit/fcea29a7ddec3822c5840f0732a97d60139b9737)]
+
+### Miscellaneous
+
+- 📝 Add notice about CommonJS require syntax [[e71211c](https://github.com/Tomas2D/knex-firebird-dialect/commit/e71211c010cc669d8097f1554503fd98a5ca42e7)]
+
+
 <a name="1.1.5"></a>
 ## 1.1.5 (2021-10-11)
 
