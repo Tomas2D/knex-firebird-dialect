@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="1.1.7"></a>
+## 1.1.7 (2022-03-19)
+
+### Changed
+
+- ⬆️ Upgrade dependencies [[b3917f7](https://github.com/Tomas2D/knex-firebird-dialect/commit/b3917f7424101f228c9621e8a7f0f6cef8e74dae)]
+
+
 <a name="1.1.6"></a>
 ## 1.1.6 (2021-12-12)
 
