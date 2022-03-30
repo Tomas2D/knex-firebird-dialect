@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="1.1.8"></a>
+## 1.1.8 (2022-03-30)
+
+### Changed
+
+- ⬆️ Update knex and eslint [[6cfc635](https://github.com/Tomas2D/knex-firebird-dialect/commit/6cfc63568f602ddf883010226e5b9b4f67848583)]
+- 🔧 Update minor version of node [[5ee0ee4](https://github.com/Tomas2D/knex-firebird-dialect/commit/5ee0ee4dd41cb36f885280880581a3bec92f307e)]
+
+### Miscellaneous
+
+-  Merge pull request [#4](https://github.com/Tomas2D/knex-firebird-dialect/issues/4) from Tomas2D/dependabot/npm_and_yarn/minimist-1.2.6 [[8d88d5b](https://github.com/Tomas2D/knex-firebird-dialect/commit/8d88d5bb9d2940bc073f04022a91d1c80678fe58)]
+-  Bump minimist from 1.2.5 to 1.2.6 [[55c07ad](https://github.com/Tomas2D/knex-firebird-dialect/commit/55c07ada4ce846204d6f569017140a646ab756f8)]
+
+
 <a name="1.1.7"></a>
 ## 1.1.7 (2022-03-19)
 
