@@ -168,12 +168,12 @@ class Client_Firebird extends Client {
       Object.entries(row).forEach(([colKey, colVal]) => {
         if (colVal instanceof Function) {
           blobEntries.push(
-            new Promise((resolve) => {
+            new Promise((resolve, reject) => {
               colVal((err, name, emitter) => {
                 getStream.buffer(emitter).then((buffer) => {
                   rows[rowIndex][colKey] = buffer;
                   resolve();
-                });
+                }).catch(reject);
               });
             })
           );
