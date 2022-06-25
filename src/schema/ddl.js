@@ -152,7 +152,8 @@ class Firebird_DDL {
     const fromIdentifier = from.replace(/[`"'[\]]/g, '');
 
     args = args.map((item) => {
-      let split = item.trim().split(' ');
+      item = item.trim()
+      let split = item.split(' ');
 
 
       const fromMatchCandidates = [
