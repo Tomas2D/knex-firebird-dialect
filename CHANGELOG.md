@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="1.2.0"></a>
+## 1.2.0 (2022-06-25)
+
+### Changed
+
+- ⬆️ Update dependencies [[c01baa8](https://github.com/Tomas2D/knex-firebird-dialect/commit/c01baa83c09094ec2de705c4c411131aabb6a479)]
+
+### Fixed
+
+- 🐛 Handle blobs parsing [[68e0093](https://github.com/Tomas2D/knex-firebird-dialect/commit/68e009398f6d3e4f87276bb44d9265fd75f79602)]
+- 🐛 Update string comparison in DDL [[0a2eaf4](https://github.com/Tomas2D/knex-firebird-dialect/commit/0a2eaf4853a0af4158bf858409f8dc1149cc8de9)]
+
+
 <a name="1.1.8"></a>
 ## 1.1.8 (2022-03-30)
 
