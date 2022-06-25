@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles --forceExit --runInBand",
     "prepublishOnly": "yarn run build",
     "lint": "eslint --fix \"{src,tests}/**/*.js\"",
     "format": "prettier --write \"src/**/*.ts\"",
