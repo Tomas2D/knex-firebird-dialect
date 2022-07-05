@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="1.2.1"></a>
+## 1.2.1 (2022-06-25)
+
+### Added
+
+- 👷‍♂️ Update Github action [[dd63cc7](https://github.com/Tomas2D/knex-firebird-dialect/commit/dd63cc77de34ff23d9d8727c768ca9fa506179c0)]
+
+
 <a name="1.2.0"></a>
 ## 1.2.0 (2022-06-25)
 
