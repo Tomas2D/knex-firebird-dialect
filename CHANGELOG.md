@@ -1,5 +1,24 @@
 # Changelog
 
+<a name="1.3.1"></a>
+## 1.3.1 (2022-07-20)
+
+### Added
+
+- ✅ Add more tests [[655c1e4](https://github.com/Tomas2D/knex-firebird-dialect/commit/655c1e42528fe6a6f9e4ac2402470e616e8150c0)]
+- ✨ Add support for add/drop/alter columns [[9bb2e08](https://github.com/Tomas2D/knex-firebird-dialect/commit/9bb2e08a094c5e0f672e4b556021c29a0f958dd4)]
+- ✨ Handle nullable and non-nullable columns, including primary keys [[793b3b5](https://github.com/Tomas2D/knex-firebird-dialect/commit/793b3b59d336d965f95dc079306ec4f0d5198379)]
+
+### Changed
+
+- 🔧 Update Knex version in peer dependencies [[2ad900a](https://github.com/Tomas2D/knex-firebird-dialect/commit/2ad900a7847655556aacb3a203a75ebcfe1d9e7a)]
+
+### Miscellaneous
+
+-  Merge pull request [#26](https://github.com/Tomas2D/knex-firebird-dialect/issues/26) from Tomas2D/dependabot/npm_and_yarn/babel/core-7.18.9 [[3a5ec67](https://github.com/Tomas2D/knex-firebird-dialect/commit/3a5ec67ef4bee4653c09e5fafb6ecb52ac05ed52)]
+-  Bump @babel/core from 7.18.6 to 7.18.9 [[f912210](https://github.com/Tomas2D/knex-firebird-dialect/commit/f912210d6bc9ecfb931c5d2dd97de35984b3271c)]
+
+
 <a name="1.3.0"></a>
 ## 1.3.0 (2022-07-20)
 
