@@ -53,7 +53,7 @@
     "prettier": "^2.2.1"
   },
   "peerDependencies": {
-    "knex": "^0.95.15"
+    "knex": ">=0.95.15"
   },
   "resolutions": {
     "set-value": ">=4.0.1"
