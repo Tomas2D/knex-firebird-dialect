@@ -35,6 +35,19 @@ class TableCompiler_Firebird extends TableCompiler {
       } primary key (${this.formatter.columnize(columns)})`
     );
   }
+
+  renameColumn(from, to) {
+    const fromSanitized = this.formatter.wrap(from)
+    const toSanitized = this.formatter.wrap(to)
+
+    this.pushQuery({
+      sql: `alter table ${this.tableName()} ${this.alterColumnPrefix} ${fromSanitized} to ${toSanitized}`,
+    });
+  }
 }
+
+TableCompiler_Firebird.prototype.addColumnsPrefix = 'ADD ';
+TableCompiler_Firebird.prototype.dropColumnPrefix = 'DROP ';
+TableCompiler_Firebird.prototype.alterColumnPrefix = 'ALTER COLUMN ';
 
 export default TableCompiler_Firebird;

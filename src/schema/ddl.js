@@ -9,9 +9,6 @@ import {
   find,
   identity,
   map,
-  omit,
-  invert,
-  fromPairs,
   some,
   negate,
   isEmpty,
@@ -244,79 +241,6 @@ class Firebird_DDL {
     return oneLineSql
       .replace(/\(.*\)/, () => `(${args.join(', ')})`)
       .replace(/,\s*([,)])/, '$1');
-  }
-
-  // Boy, this is quite a method.
-  async renameColumn(from, to) {
-    return this.client.transaction(
-      async (trx) => {
-        this.trx = trx;
-        const column = await this.getColumn(from);
-        const sql = await this.getTableSql(column);
-        const a = this.client.wrapIdentifier(from);
-        const b = this.client.wrapIdentifier(to);
-        const createTable = sql[0];
-        const newSql = this._doReplace(createTable.sql, a, b);
-        if (sql === newSql) {
-          throw new Error('Unable to find the column to change');
-        }
-
-        const { from: mappedFrom, to: mappedTo } = invert(
-          this.client.postProcessResponse(
-            invert({
-              from,
-              to,
-            })
-          )
-        );
-
-        return this.reinsertMapped(createTable, newSql, (row) => {
-          row[mappedTo] = row[mappedFrom];
-          return omit(row, mappedFrom);
-        });
-      },
-      { connection: this.connection }
-    );
-  }
-
-  async dropColumn(columns) {
-    return this.client.transaction(
-      (trx) => {
-        this.trx = trx;
-        return Promise.all(columns.map((column) => this.getColumn(column)))
-          .then(() => this.getTableSql())
-          .then((sql) => {
-            const createTable = sql[0];
-            let newSql = createTable.sql;
-            columns.forEach((column) => {
-              const a = this.client.wrapIdentifier(column);
-              newSql = this._doReplace(newSql, a, '');
-            });
-            if (sql === newSql) {
-              throw new Error('Unable to find the column to change');
-            }
-            const mappedColumns = Object.keys(
-              this.client.postProcessResponse(
-                fromPairs(columns.map((column) => [column, column]))
-              )
-            );
-            return this.reinsertMapped(createTable, newSql, (row) =>
-              omit(row, ...mappedColumns)
-            );
-          });
-      },
-      { connection: this.connection }
-    );
-  }
-
-  reinsertMapped(createTable, newSql, mapRow) {
-    return Promise.resolve()
-      .then(() => this.createTempTable(createTable))
-      .then(() => this.copyData())
-      .then(() => this.dropOriginal())
-      .then(() => this.trx.raw(newSql))
-      .then(() => this.reinsertData(mapRow))
-      .then(() => this.dropTempTable());
   }
 }
 
