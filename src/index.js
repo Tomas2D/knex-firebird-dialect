@@ -4,6 +4,7 @@ import getStream from "get-stream";
 import assert from "assert";
 import Client from "knex/lib/client";
 
+import ColumnBuilder from "./schema/columnbuilder";
 import ColumnCompiler from "./schema/columncompiler";
 import QueryCompiler from "./query/compiler";
 import TableCompiler from "./schema/tablecompiler";
@@ -28,6 +29,10 @@ class Client_Firebird extends Client {
 
   columnCompiler() {
     return new ColumnCompiler(this, ...arguments);
+  }
+
+  columnBuilder() {
+    return new ColumnBuilder(this, ...arguments);
   }
 
   tableCompiler() {
