@@ -1,5 +1,49 @@
 # Changelog
 
+<a name="1.3.0"></a>
+## 1.3.0 (2022-07-20)
+
+### Changed
+
+- ⬇️ Downgrade Husky [[2dc6e53](https://github.com/Tomas2D/knex-firebird-dialect/commit/2dc6e53cdc27038971052c5b61b06aa29555d22a)]
+- 🔧 Setup Dependabot auto updates [[1cfc800](https://github.com/Tomas2D/knex-firebird-dialect/commit/1cfc80048e7f1b5c8f5f0f56221685471c51858f)]
+
+### Fixed
+
+- 🐛 Add missing parameter in TableCompiler [[6ef71d9](https://github.com/Tomas2D/knex-firebird-dialect/commit/6ef71d9d2746b3067b19b4d664c43272d39e2e75)]
+
+### Miscellaneous
+
+-  Merge pull request [#22](https://github.com/Tomas2D/knex-firebird-dialect/issues/22) from Tomas2D/dependabot/npm_and_yarn/babel/preset-env-7.18.9 [[fca2380](https://github.com/Tomas2D/knex-firebird-dialect/commit/fca238063327b2894402918b086e36dbf8c300e6)]
+-  Merge pull request [#23](https://github.com/Tomas2D/knex-firebird-dialect/issues/23) from Tomas2D/dependabot/npm_and_yarn/babel/plugin-transform-runtime-7.18.9 [[a7ad544](https://github.com/Tomas2D/knex-firebird-dialect/commit/a7ad5448ad6a999e6cb35add81f50a5526f0d1cf)]
+-  Merge pull request [#20](https://github.com/Tomas2D/knex-firebird-dialect/issues/20) from Tomas2D/dependabot/npm_and_yarn/babel/eslint-parser-7.18.9 [[e95e0f0](https://github.com/Tomas2D/knex-firebird-dialect/commit/e95e0f04b484271be74a6b7faa22d99511beb6b4)]
+-  Merge pull request [#11](https://github.com/Tomas2D/knex-firebird-dialect/issues/11) from Tomas2D/dependabot/npm_and_yarn/husky-8.0.1 [[13e7e61](https://github.com/Tomas2D/knex-firebird-dialect/commit/13e7e6131ab60b3e2aac7cc1f24b9ed21c2c7de4)]
+-  Bump @babel/plugin-transform-runtime from 7.18.6 to 7.18.9 [[e410b32](https://github.com/Tomas2D/knex-firebird-dialect/commit/e410b3264f13606f103fd78d5c7c4c7deb37abeb)]
+-  Bump @babel/preset-env from 7.18.6 to 7.18.9 [[af6f701](https://github.com/Tomas2D/knex-firebird-dialect/commit/af6f70190eb47b71b9eeee3930bea1929d4701df)]
+-  Bump @babel/eslint-parser from 7.18.2 to 7.18.9 [[ac0f64c](https://github.com/Tomas2D/knex-firebird-dialect/commit/ac0f64cb842195f43e992c877679655cd16659bf)]
+-  Merge pull request [#18](https://github.com/Tomas2D/knex-firebird-dialect/issues/18) from Tomas2D/dependabot/npm_and_yarn/eslint-8.20.0 [[fc9ac1f](https://github.com/Tomas2D/knex-firebird-dialect/commit/fc9ac1fef6f22282f9548d41ca2bc4e0b6880e8b)]
+-  Bump eslint from 8.19.0 to 8.20.0 [[ccc83b5](https://github.com/Tomas2D/knex-firebird-dialect/commit/ccc83b52990e1ab64ef12afdea75d6e65e321670)]
+-  Merge pull request [#16](https://github.com/Tomas2D/knex-firebird-dialect/issues/16) from Tomas2D/dependabot/npm_and_yarn/jest-28.1.3 [[4135dd9](https://github.com/Tomas2D/knex-firebird-dialect/commit/4135dd9414289c1efd11e1524b99ddf5f3e875b2)]
+-  Merge pull request [#17](https://github.com/Tomas2D/knex-firebird-dialect/issues/17) from Tomas2D/dependabot/npm_and_yarn/eslint-plugin-jest-26.6.0 [[27e099a](https://github.com/Tomas2D/knex-firebird-dialect/commit/27e099a997aa42d81e49fd586e2e53662a7f192a)]
+-  Bump husky from 7.0.4 to 8.0.1 [[e02abbd](https://github.com/Tomas2D/knex-firebird-dialect/commit/e02abbd002e35505b7570348da22114153350924)]
+-  Bump jest from 27.5.1 to 28.1.3 [[f6d01bf](https://github.com/Tomas2D/knex-firebird-dialect/commit/f6d01bfee6291186a7e116fb2cd496075a9e7b68)]
+-  Merge pull request [#6](https://github.com/Tomas2D/knex-firebird-dialect/issues/6) from Tomas2D/dependabot/npm_and_yarn/eslint-8.19.0 [[9f0d3a5](https://github.com/Tomas2D/knex-firebird-dialect/commit/9f0d3a533f5f55ccd661d2a9f042bef9ae83f10b)]
+-  Merge pull request [#14](https://github.com/Tomas2D/knex-firebird-dialect/issues/14) from Tomas2D/dependabot/npm_and_yarn/babel/runtime-7.18.6 [[8c65802](https://github.com/Tomas2D/knex-firebird-dialect/commit/8c6580234043cb82af5f5d2827955daad67474cb)]
+-  Bump eslint-plugin-jest from 26.5.3 to 26.6.0 [[a8a49e1](https://github.com/Tomas2D/knex-firebird-dialect/commit/a8a49e118340d28e28b348895542b17d913cf47a)]
+-  Merge pull request [#8](https://github.com/Tomas2D/knex-firebird-dialect/issues/8) from Tomas2D/dependabot/npm_and_yarn/babel/core-7.18.6 [[91960fb](https://github.com/Tomas2D/knex-firebird-dialect/commit/91960fb605073dda4d27203ac617c78041abbf84)]
+-  Merge pull request [#13](https://github.com/Tomas2D/knex-firebird-dialect/issues/13) from Tomas2D/dependabot/npm_and_yarn/babel/cli-7.18.6 [[0961102](https://github.com/Tomas2D/knex-firebird-dialect/commit/09611020a346d15304b5f6e6a6d229d934f38a3b)]
+-  Merge pull request [#12](https://github.com/Tomas2D/knex-firebird-dialect/issues/12) from Tomas2D/dependabot/npm_and_yarn/babel/preset-env-7.18.6 [[33a12a9](https://github.com/Tomas2D/knex-firebird-dialect/commit/33a12a9a71a18a24dd1396e52fd7ca86f9aedcf8)]
+-  Merge pull request [#9](https://github.com/Tomas2D/knex-firebird-dialect/issues/9) from Tomas2D/dependabot/npm_and_yarn/babel/plugin-transform-runtime-7.18.6 [[f59b392](https://github.com/Tomas2D/knex-firebird-dialect/commit/f59b39225f78b6efa3fdd12ce441abbd9784c64c)]
+-  Bump eslint from 7.32.0 to 8.19.0 [[c70f1eb](https://github.com/Tomas2D/knex-firebird-dialect/commit/c70f1ebecffe5c84dbc1b1f50684d95a525fa1d1)]
+-  Bump @babel/runtime from 7.18.3 to 7.18.6 [[95eaf4b](https://github.com/Tomas2D/knex-firebird-dialect/commit/95eaf4bcab23149236cd3d4d105ba8083794bd84)]
+-  Bump @babel/cli from 7.17.10 to 7.18.6 [[e12c55e](https://github.com/Tomas2D/knex-firebird-dialect/commit/e12c55ec81bc0f128dde1cb064a9696c36ffc2de)]
+-  Bump @babel/core from 7.18.5 to 7.18.6 [[0525d8d](https://github.com/Tomas2D/knex-firebird-dialect/commit/0525d8d2ed6145b4840e23efb46d4d3556746d89)]
+-  Bump @babel/preset-env from 7.18.2 to 7.18.6 [[3bdf058](https://github.com/Tomas2D/knex-firebird-dialect/commit/3bdf058771b95e1d0a7b823170549df98a6fb4b7)]
+-  Merge pull request [#10](https://github.com/Tomas2D/knex-firebird-dialect/issues/10) from Tomas2D/dependabot/npm_and_yarn/babel/plugin-transform-modules-commonjs-7.18.6 [[417638d](https://github.com/Tomas2D/knex-firebird-dialect/commit/417638d63520a02ac40cb2c99c94694d3b64972d)]
+-  Bump @babel/plugin-transform-runtime from 7.18.5 to 7.18.6 [[56d5247](https://github.com/Tomas2D/knex-firebird-dialect/commit/56d5247470887872bd131a984b528d2a5b3e42ea)]
+-  Bump @babel/plugin-transform-modules-commonjs from 7.18.2 to 7.18.6 [[a97d031](https://github.com/Tomas2D/knex-firebird-dialect/commit/a97d031e95523aaaab69ad31627cc7384c493a35)]
+
+
 <a name="1.2.1"></a>
 ## 1.2.1 (2022-06-25)
 
