@@ -25,8 +25,7 @@ class TableCompiler_Firebird extends TableCompiler {
     );
   }
 
-  //TableCompiler_Firebird.prototype.foreign =
-  primary() {
+  primary(columns) {
     this.constraintName = this.constraintName
       ? this.formatter.wrap(this.constraintName)
       : this.formatter.wrap(`${this.tableNameRaw}_pkey`);

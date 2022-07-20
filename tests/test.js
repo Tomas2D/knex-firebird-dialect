@@ -69,13 +69,13 @@ describe("Knex Firebird Dialect", () => {
 
     await knex.schema
       .createTable("users", function (table) {
-        table.increments("id");
+        table.increments("id").primary();
         table.string("role");
         table.string("user_name");
         table.binary("binary_data");
       })
       .createTable("accounts", function (table) {
-        table.increments("id");
+        table.increments("id").primary();
         table.string("account_name");
         table.integer("user_id").unsigned().references("users.id");
       });
