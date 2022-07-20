@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Knex Firebird Dialect Filtering 1`] = `
+exports[`Basic operations Filtering 1`] = `
 Array [
   Object {
     "binary_data": Object {
@@ -35,7 +35,7 @@ Array [
 ]
 `;
 
-exports[`Knex Firebird Dialect Insert data into tables 1`] = `
+exports[`Basic operations Insert data into tables 1`] = `
 Array [
   Object {
     "binary_data": Object {
@@ -139,7 +139,7 @@ Array [
 ]
 `;
 
-exports[`Knex Firebird Dialect Insert data into tables 2`] = `
+exports[`Basic operations Insert data into tables 2`] = `
 Array [
   Object {
     "account_name": "knex",
@@ -149,7 +149,7 @@ Array [
 ]
 `;
 
-exports[`Knex Firebird Dialect Left join 1`] = `
+exports[`Basic operations Left join 1`] = `
 Array [
   Object {
     "account": "knex",
@@ -158,7 +158,7 @@ Array [
 ]
 `;
 
-exports[`Knex Firebird Dialect Test limits 1`] = `
+exports[`Basic operations Test limits 1`] = `
 Array [
   Object {
     "binary_data": Object {

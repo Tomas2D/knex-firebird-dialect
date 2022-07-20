@@ -4,7 +4,7 @@ import client from "../src";
 import fs from "fs";
 import path from "path";
 
-const knexConfig = {
+const generateConfig = () => ({
   client,
   connection: {
     host: "127.0.0.1",
@@ -17,12 +17,13 @@ const knexConfig = {
     ),
     lowercase_keys: true,
   },
-  pool: { min: 1, max: 2 },
+  pool: { min: 1, max: 1 },
   createDatabaseIfNotExists: true,
   debug: false,
-};
+});
 
-describe("Test Node Firebird", () => {
+describe.skip("Test Node Firebird", () => {
+  const knexConfig = generateConfig();
   let fb;
 
   beforeAll((done) => {
@@ -35,7 +36,9 @@ describe("Test Node Firebird", () => {
   });
 
   afterAll(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await new Promise((resolve) => fb.detach(resolve));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
   });
 
@@ -47,8 +50,9 @@ describe("Test Node Firebird", () => {
   });
 });
 
-describe("Knex Firebird Dialect", () => {
+describe("Basic operations", () => {
   let knex;
+  const knexConfig = generateConfig();
 
   beforeAll(() => {
     knex = knexLib(knexConfig);
@@ -128,7 +132,6 @@ describe("Knex Firebird Dialect", () => {
           .table("accounts")
           .insert({ id: 101, account_name: "knex", user_id: 1 });
 
-        rtx.commit();
         resolve();
       })
     );
@@ -154,18 +157,18 @@ describe("Knex Firebird Dialect", () => {
   it("Sorting", async () => {
     await expect(knex.select("id").from("users").orderBy("id", "desc")).resolves
       .toMatchInlineSnapshot(`
-            Array [
-              Object {
-                "id": 3,
-              },
-              Object {
-                "id": 2,
-              },
-              Object {
-                "id": 1,
-              },
-            ]
-          `);
+      Array [
+        Object {
+          "id": 3,
+        },
+        Object {
+          "id": 2,
+        },
+        Object {
+          "id": 1,
+        },
+      ]
+    `);
   });
 
   it("Filtering", async () => {
@@ -201,55 +204,55 @@ describe("Knex Firebird Dialect", () => {
 
   it("Select one", async () => {
     await expect(knex("users").first("*")).resolves.toMatchInlineSnapshot(`
-Object {
-  "binary_data": Object {
-    "data": Array [
-      66,
-      105,
-      110,
-      97,
-      114,
-      121,
-      32,
-      100,
-      97,
-      116,
-      97,
-      32,
-      102,
-      111,
-      114,
-      32,
-      84,
-      111,
-      109,
-      195,
-      161,
-      197,
-      161,
-      32,
-      240,
-      159,
-      152,
-      142,
-    ],
-    "type": "Buffer",
-  },
-  "id": 1,
-  "role": "user",
-  "user_name": "Tomáš 😎",
-}
-`);
+      Object {
+        "binary_data": Object {
+          "data": Array [
+            66,
+            105,
+            110,
+            97,
+            114,
+            121,
+            32,
+            100,
+            97,
+            116,
+            97,
+            32,
+            102,
+            111,
+            114,
+            32,
+            84,
+            111,
+            109,
+            195,
+            161,
+            197,
+            161,
+            32,
+            240,
+            159,
+            152,
+            142,
+          ],
+          "type": "Buffer",
+        },
+        "id": 1,
+        "role": "user",
+        "user_name": "Tomáš 😎",
+      }
+    `);
   });
 
   it("Test pluck", async () => {
     await expect(knex("users").pluck("id")).resolves.toMatchInlineSnapshot(`
-Array [
-  1,
-  2,
-  3,
-]
-`);
+      Array [
+        1,
+        2,
+        3,
+      ]
+    `);
   });
 
   it("Drop tables", async () => {
@@ -269,5 +272,83 @@ Array [
       rtx.commit();
       done();
     });
+  });
+
+  it("Transaction - error", async () => {
+    await expect(knex.transaction(async (rtx) => {
+      await knex
+        .transacting(rtx)
+        .returning("id")
+        .insert({
+          id: 1
+        })
+        .into("users")})).rejects.toThrow()
+  });
+});
+
+describe("DDL", () => {
+  let knex;
+  const tableName = "ddl";
+  const knexConfig = generateConfig();
+
+  beforeAll(async () => {
+    knex = knexLib(knexConfig);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+  });
+
+  afterAll(async () => {
+    await knex.destroy();
+    await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
+  });
+
+  it("Test connection", async () => {
+    await knex.raw("SELECT 1 FROM RDB$DATABASE");
+  });
+
+  it("Create table", async () => {
+    expect(await knex.schema.hasTable("ddl")).toBe(false);
+
+    await knex.schema.createTable("ddl", function (table) {
+      table.string("id").primary();
+      table.string("col_a").nullable();
+      table.integer("col_b").notNullable();
+      table.integer("col_d").nullable();
+    });
+
+    expect(await knex.schema.hasTable("ddl")).toBe(true);
+  });
+
+  it("Rename table columns", async () => {
+    const oldName = "col_d";
+    const newName = "col_d_renamed";
+
+    expect(await knex.schema.hasColumn(tableName, oldName)).toBe(true);
+    expect(await knex.schema.hasColumn(tableName, newName)).toBe(false);
+
+    await knex.schema
+      .table(tableName, (table) => table.renameColumn(oldName, newName))
+      .then();
+
+    expect(await knex.schema.hasColumn(tableName, oldName)).toBe(false);
+    expect(await knex.schema.hasColumn(tableName, newName)).toBe(true);
+
+    await knex.schema
+      .table(tableName, (table) => table.renameColumn(newName, oldName))
+      .then();
+
+    expect(await knex.schema.hasColumn(tableName, oldName)).toBe(true);
+    expect(await knex.schema.hasColumn(tableName, newName)).toBe(false);
+  });
+
+  it("Create & Drop column", async () => {
+    expect(await knex.schema.hasColumn(tableName, "tmp")).toBe(false);
+    await knex.schema
+      .alterTable(tableName, (table) => table.string("tmp").nullable())
+      .then();
+    expect(await knex.schema.hasColumn(tableName, "tmp")).toBe(true);
+    await knex.schema
+      .table(tableName, (table) => table.dropColumn("tmp"))
+      .then();
+    expect(await knex.schema.hasColumn(tableName, "tmp")).toBe(false);
   });
 });
