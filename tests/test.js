@@ -22,7 +22,7 @@ const generateConfig = () => ({
   debug: false,
 });
 
-describe.skip("Test Node Firebird", () => {
+describe("Test Node Firebird", () => {
   const knexConfig = generateConfig();
   let fb;
 
