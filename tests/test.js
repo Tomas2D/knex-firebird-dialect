@@ -143,28 +143,28 @@ describe("Basic operations", () => {
     expect(accounts).toMatchSnapshot();
 
     expect(await knex.count().first().from("users")).toMatchInlineSnapshot(`
-          Object {
-            "count": 3,
-          }
-      `);
+      {
+        "count": 3,
+      }
+    `);
     expect(await knex.count().first().from("accounts")).toMatchInlineSnapshot(`
-          Object {
-            "count": 1,
-          }
-      `);
+      {
+        "count": 1,
+      }
+    `);
   });
 
   it("Sorting", async () => {
     await expect(knex.select("id").from("users").orderBy("id", "desc")).resolves
       .toMatchInlineSnapshot(`
-      Array [
-        Object {
+      [
+        {
           "id": 3,
         },
-        Object {
+        {
           "id": 2,
         },
-        Object {
+        {
           "id": 1,
         },
       ]
@@ -204,9 +204,9 @@ describe("Basic operations", () => {
 
   it("Select one", async () => {
     await expect(knex("users").first("*")).resolves.toMatchInlineSnapshot(`
-      Object {
-        "binary_data": Object {
-          "data": Array [
+      {
+        "binary_data": {
+          "data": [
             66,
             105,
             110,
@@ -247,7 +247,7 @@ describe("Basic operations", () => {
 
   it("Test pluck", async () => {
     await expect(knex("users").pluck("id")).resolves.toMatchInlineSnapshot(`
-      Array [
+      [
         1,
         2,
         3,
@@ -275,14 +275,17 @@ describe("Basic operations", () => {
   });
 
   it("Transaction - error", async () => {
-    await expect(knex.transaction(async (rtx) => {
-      await knex
-        .transacting(rtx)
-        .returning("id")
-        .insert({
-          id: 1
-        })
-        .into("users")})).rejects.toThrow()
+    await expect(
+      knex.transaction(async (rtx) => {
+        await knex
+          .transacting(rtx)
+          .returning("id")
+          .insert({
+            id: 1,
+          })
+          .into("users");
+      })
+    ).rejects.toThrow();
   });
 });
 

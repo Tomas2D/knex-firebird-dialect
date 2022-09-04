@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Basic operations Filtering 1`] = `
-Array [
-  Object {
-    "binary_data": Object {
-      "data": Array [
+[
+  {
+    "binary_data": {
+      "data": [
         66,
         105,
         110,
@@ -36,10 +36,10 @@ Array [
 `;
 
 exports[`Basic operations Insert data into tables 1`] = `
-Array [
-  Object {
-    "binary_data": Object {
-      "data": Array [
+[
+  {
+    "binary_data": {
+      "data": [
         66,
         105,
         110,
@@ -75,9 +75,9 @@ Array [
     "role": "user",
     "user_name": "Tomáš 😎",
   },
-  Object {
-    "binary_data": Object {
-      "data": Array [
+  {
+    "binary_data": {
+      "data": [
         66,
         105,
         110,
@@ -105,9 +105,9 @@ Array [
     "role": "user",
     "user_name": "Adam",
   },
-  Object {
-    "binary_data": Object {
-      "data": Array [
+  {
+    "binary_data": {
+      "data": [
         66,
         105,
         110,
@@ -140,8 +140,8 @@ Array [
 `;
 
 exports[`Basic operations Insert data into tables 2`] = `
-Array [
-  Object {
+[
+  {
     "account_name": "knex",
     "id": 101,
     "user_id": 1,
@@ -150,8 +150,8 @@ Array [
 `;
 
 exports[`Basic operations Left join 1`] = `
-Array [
-  Object {
+[
+  {
     "account": "knex",
     "user_name": "Tomáš 😎",
   },
@@ -159,10 +159,10 @@ Array [
 `;
 
 exports[`Basic operations Test limits 1`] = `
-Array [
-  Object {
-    "binary_data": Object {
-      "data": Array [
+[
+  {
+    "binary_data": {
+      "data": [
         66,
         105,
         110,
@@ -195,8 +195,8 @@ Array [
 `;
 
 exports[`Test Node Firebird Simple select 1`] = `
-Array [
-  Object {
+[
+  {
     "constant": 1,
   },
 ]
