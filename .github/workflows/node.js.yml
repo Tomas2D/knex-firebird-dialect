@@ -43,6 +43,7 @@ jobs:
         sudo chown root:firebird /opt/firebird/SYSDBA.password
         sudo chmod 440 /opt/firebird/SYSDBA.password
         sudo chown -R firebird:firebird .
+        while ! nc -z localhost 3050; do sleep 1 ; done
 
     - name: Tests
       run: |
