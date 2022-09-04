@@ -33,9 +33,9 @@ jobs:
       run: |
         sudo apt-get install libtommath1
         sudo ln -s /usr/lib/x86_64-linux-gnu/libtommath.so.1.0.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
-        wget -nv -O Firebird-3.0.7.33374-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/R3_0_7/Firebird-3.0.7.33374-0.amd64.tar.gz"
-        tar xzvf Firebird-3.0.7.33374-0.amd64.tar.gz
-        (cd Firebird-3.0.7.33374-0.amd64; sudo ./install.sh -silent)
+        wget -nv -O Firebird-3.0.10.33601-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v3.0.10/Firebird-3.0.10.33601-0.amd64.tar.gz"
+        tar xzvf Firebird-3.0.10.33601-0.amd64.tar.gz
+        (cd Firebird-3.0.10.33601-0.amd64; sudo ./install.sh -silent)
         sudo usermod -a -G firebird `whoami`
         echo 'WireCrypt = Enabled' | sudo tee -a /opt/firebird/firebird.conf > /dev/null
         sudo killall firebird
