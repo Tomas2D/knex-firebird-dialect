@@ -13,19 +13,19 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-18.04]
+        os: [ubuntu-latest]
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install dependencies
-      uses: borales/actions-yarn@v3.0.0
+      uses: borales/actions-yarn@v3
       with:
         cmd: install --frozen-lockfile
 
     - name: Build
-      uses: borales/actions-yarn@v3.0.0
+      uses: borales/actions-yarn@v3
       with:
         cmd: build
 
@@ -44,6 +44,7 @@ jobs:
         sudo chmod 440 /opt/firebird/SYSDBA.password
         sudo chown -R firebird:firebird .
         while ! nc -z localhost 3050; do sleep 1 ; done
+        sleep 2
 
     - name: Tests
       run: |
