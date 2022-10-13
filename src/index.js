@@ -60,12 +60,23 @@ class Client_Firebird extends Client {
       : this.driver.attach;
 
     return new Promise((resolve, reject) => {
-      driverConnectFn(this.connectionSettings, (error, connection) => {
-        if (error) {
+      let retryCount = 1, maxRetryCount = 3;
+      const connect = () => {
+        driverConnectFn(this.connectionSettings, (error, connection) => {
+          if (!error) {
+            return resolve(connection);
+          }
+
+          // Bug in the "node-firebird" library
+          // "Your user name and password are not defined. Ask your database administrator to set up a Firebird login."
+          if (String(error?.gdscode) === '335544472' && retryCount < maxRetryCount) {
+            retryCount++
+            return connect()
+          }
           return reject(error);
-        }
-        resolve(connection);
-      });
+        });
+      }
+      connect()
     });
   }
 
