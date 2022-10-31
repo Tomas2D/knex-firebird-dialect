@@ -115,7 +115,7 @@ class Client_Firebird extends Client {
       if (!sql) {
         return resolver();
       }
-      const c = connection._trasaction || connection;
+      const c = connection._transaction || connection;
       c.query(sql, obj.bindings, (error, rows, fields) => {
         if (error) {
           return rejecter(error);
