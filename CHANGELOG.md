@@ -1,5 +1,27 @@
 # Changelog
 
+<a name="1.4.4"></a>
+## 1.4.4 (2022-11-02)
+
+### Added
+
+- ✅ Improve code coverage [[794244e](https://github.com/Tomas2D/knex-firebird-dialect/commit/794244edf31669410b8eeefe78777670d2aee1d2)]
+
+### Changed
+
+- 🔧 Make node-firebird peer dependency [[3186ba8](https://github.com/Tomas2D/knex-firebird-dialect/commit/3186ba89b0853906513b9a16946c8d10f02ff598)]
+
+### Fixed
+
+- 🐛 Fix implementation of columnInfo [[a4c4b9c](https://github.com/Tomas2D/knex-firebird-dialect/commit/a4c4b9c842b3c8040da917f1b41116eba3df8760)]
+- 🐛 Fix whereIn clause [[079d54f](https://github.com/Tomas2D/knex-firebird-dialect/commit/079d54f8c06fe0c46b3ba7057ae2a57eddba6824)]
+
+### Miscellaneous
+
+-  👷 Use .nvmrc file inside release action [[e80b445](https://github.com/Tomas2D/knex-firebird-dialect/commit/e80b445d020294d9add971a4df4355253cfa3054)]
+-  👷 Switch to actions/checkout and setup v3 [[03a4b22](https://github.com/Tomas2D/knex-firebird-dialect/commit/03a4b2266ce5560da47d64489cb44bf099684a71)]
+
+
 <a name="1.4.3"></a>
 ## 1.4.3 (2022-10-31)
 
