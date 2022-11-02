@@ -74,13 +74,13 @@ describe("Basic operations", () => {
     await knex.schema
       .createTable("users", function (table) {
         table.increments("id").primary();
-        table.string("role");
-        table.string("user_name");
+        table.string("role").collate();
+        table.string("user_name", 100).comment('User Name');
         table.binary("binary_data");
       })
       .createTable("accounts", function (table) {
         table.increments("id").primary();
-        table.string("account_name");
+        table.string("account_name").collate('utf8');
         table.integer("user_id").unsigned().references("users.id");
       });
 
@@ -91,6 +91,15 @@ describe("Basic operations", () => {
     expect(await knex.schema.hasColumn("accounts", "user_id")).toBe(true);
     expect(await knex.schema.hasColumn("accounts", "some_column")).toBe(false);
   });
+
+  it("Not implemented functions", async () => {
+    const trx = await knex.transaction();
+    expect(trx.isCompleted()).toBe(false);
+    await trx.commit();
+    expect(trx.isCompleted()).toBe(true);
+    await expect(() => trx.savepoint()).rejects.toThrow();
+    await expect(() => knex.schema.renameTable('X', 'Y')).rejects.toThrow();
+  })
 
   it("Insert data into tables", async () => {
     await new Promise((resolve) =>
@@ -155,7 +164,7 @@ describe("Basic operations", () => {
   });
 
   it("Sorting", async () => {
-    await expect(knex.select("id").from("users").orderBy("id", "desc")).resolves
+    await expect(knex.distinct("id").from("users").orderBy("id", "desc")).resolves
       .toMatchInlineSnapshot(`
       [
         {
@@ -194,9 +203,7 @@ describe("Basic operations", () => {
     await expect(
       knex("users")
         .select("*")
-        .where({
-          role: "user",
-        })
+        .whereIn(['role'], ["user"])
         .offset(2)
         .limit(2)
     ).resolves.toMatchSnapshot();
@@ -258,6 +265,9 @@ describe("Basic operations", () => {
   it("Drop tables", async () => {
     await knex.schema.dropTable("accounts");
     await knex.schema.dropTable("users");
+
+    await knex.schema.dropTableIfExists("accounts");
+    await knex.schema.dropTableIfExists("users");
 
     await expect(knex.schema.hasTable("accounts")).resolves.toBe(false);
     await expect(knex.schema.hasTable("users")).resolves.toBe(false);
