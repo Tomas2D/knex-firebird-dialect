@@ -14,7 +14,7 @@ Show some love and ⭐️ this project!
 Start with installing the package with your favorite package manager.
 
 ```
-yarn add knex-firebird-dialect
+yarn add knex-firebird-dialect node-firebird
 ```
 
 or
