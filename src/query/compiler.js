@@ -1,5 +1,7 @@
 // Firebird Query Builder & Compiler
 import QueryCompiler from "knex/lib/query/querycompiler";
+const identity = require('lodash/identity');
+const reduce = require('lodash/reduce');
 
 class QueryCompiler_Firebird extends QueryCompiler {
   columns() {
@@ -96,7 +98,7 @@ class QueryCompiler_Firebird extends QueryCompiler {
     // identifiers otherwise.
     const table = this.client.customWrapIdentifier(
       this.single.table,
-      this.identity
+      identity
     );
 
     return {

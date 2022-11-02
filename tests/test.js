@@ -90,6 +90,8 @@ describe("Basic operations", () => {
     expect(await knex.schema.hasTable("accounts")).toBe(true);
     expect(await knex.schema.hasColumn("accounts", "user_id")).toBe(true);
     expect(await knex.schema.hasColumn("accounts", "some_column")).toBe(false);
+
+    expect(await knex('users').columnInfo()).toBeTruthy()
   });
 
   it("Not implemented functions", async () => {
