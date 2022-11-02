@@ -138,22 +138,6 @@ class QueryCompiler_Firebird extends QueryCompiler {
       },
     };
   }
-
-  whereIn(statement) {
-    if (Array.isArray(statement.column)) {
-      const conditions = statement.value.map((valueCols) =>
-        valueCols
-          .map((value, idx) => {
-            return `${this.formatter.columnize(
-              statement.column[idx]
-            )} = ${this.formatter.values(value)}`;
-          })
-          .join(" and ")
-      );
-      return `( ${conditions.join("\n or ")} )`;
-    }
-    return super.whereIn(statement);
-  }
 }
 
 export default QueryCompiler_Firebird;
