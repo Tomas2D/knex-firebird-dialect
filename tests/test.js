@@ -3,6 +3,7 @@ import Firebird from "node-firebird";
 import client from "../src";
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 const generateConfig = () => ({
   client,
@@ -12,7 +13,7 @@ const generateConfig = () => ({
     user: process.env.ISC_USER || "SYSDBA",
     password: process.env.ISC_PASSWORD || "masterkey",
     database: path.join(
-      process.cwd(),
+      os.tmpdir(),
       `firebird-knex-dialect-${Date.now()}.fdb`
     ),
     lowercase_keys: true,
