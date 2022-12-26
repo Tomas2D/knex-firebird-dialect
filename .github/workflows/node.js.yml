@@ -31,7 +31,7 @@ jobs:
 
     - name: Install Firebird
       run: |
-        sudo apt-get install libtommath1
+        sudo apt-get install libtommath1 libncurses5 ia32-libs
         sudo ln -sf /usr/lib/x86_64-linux-gnu/libtommath.so.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
         wget -nv -O Firebird-3.0.10.33601-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v3.0.10/Firebird-3.0.10.33601-0.amd64.tar.gz"
         tar xzvf Firebird-3.0.10.33601-0.amd64.tar.gz
