@@ -3029,9 +3029,9 @@ natural-compare@^1.4.0:
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
 node-firebird@^1.1.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/node-firebird/-/node-firebird-1.1.4.tgz#f14c05f4bfe684586a5b0ec08aff39d4ebea6593"
-  integrity sha512-qVNyFJwqxHsSDO8QkFyTD7Sgno7cnFh+skVtS2A/XOG3f8rrnQyNd0ZQNy0gTSouSGxzIpxRfXmpkrJ2QShUwg==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/node-firebird/-/node-firebird-1.1.5.tgz#1217a5a0d99955f9cf8bf6f46052e1a6afd0bded"
+  integrity sha512-hfkNiaD0g9X7qD6IdaSqK3cpV43qT/t+TlOeuBVf7I+AOTziVAYg+0u04hTTqv1kX8mZU5BkfFPRNB4g2Mfrow==
   dependencies:
     big-integer "^1.6.48"
     long "^4.0.0"
