@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="1.4.6"></a>
+## 1.4.6 (2023-06-03)
+
+### Changed
+
+- ⬆️ Upgrade dependencies [[291de0b](https://github.com/Tomas2D/knex-firebird-dialect/commit/291de0b6eedb496ebe7dda0dab3baf88f15a564b)]
+
+
 <a name="1.4.5"></a>
 ## 1.4.5 (2023-05-01)
 
