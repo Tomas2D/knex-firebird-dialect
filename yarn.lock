@@ -2270,10 +2270,15 @@ get-package-type@^0.1.0:
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
 
-get-stream@^6.0.0, get-stream@~6.0.1:
+get-stream@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-6.0.1.tgz#a262d8eef67aced57c2852ad6167526a43cbf7b7"
   integrity sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==
+
+get-stream@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-8.0.0.tgz#6e07aa5b9b2a6e85e757c18a763e01e8a0722075"
+  integrity sha512-tdTnEIxF4oDc9Gd+PAApCAQWTf5t8N0/QDf4nH7ahIgc2YUvRL7259xiFlkLEpehTXc7QugSflnLLJap5Gd+HA==
 
 getopts@2.3.0:
   version "2.3.0"
