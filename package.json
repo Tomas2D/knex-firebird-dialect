@@ -33,7 +33,7 @@
   "dependencies": {
     "@babel/runtime": "^7.22.3",
     "debug": "^4.3.4",
-    "get-stream": "~8.0.0",
+    "get-stream": "~6.0.1",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
