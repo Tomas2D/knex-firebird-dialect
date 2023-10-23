@@ -1742,7 +1742,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-big-integer@^1.6.48:
+big-integer@^1.6.51:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
@@ -3101,10 +3101,10 @@ lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-long@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
-  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
+long@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
+  integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -3183,12 +3183,12 @@ natural-compare@^1.4.0:
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
 node-firebird@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/node-firebird/-/node-firebird-1.1.5.tgz#1217a5a0d99955f9cf8bf6f46052e1a6afd0bded"
-  integrity sha512-hfkNiaD0g9X7qD6IdaSqK3cpV43qT/t+TlOeuBVf7I+AOTziVAYg+0u04hTTqv1kX8mZU5BkfFPRNB4g2Mfrow==
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/node-firebird/-/node-firebird-1.1.8.tgz#74e6b48f78641a65fc9651ca422edfd9b25e40e5"
+  integrity sha512-G64hTeb5hsIocxau76ba9G/htT0Uy6ouJoYQ9zaWuui2GRbQUNxvuc9YMT8I2Mh+/66/+r0rhrV8xQEYwUtPKw==
   dependencies:
-    big-integer "^1.6.48"
-    long "^4.0.0"
+    big-integer "^1.6.51"
+    long "^5.2.3"
 
 node-int64@^0.4.0:
   version "0.4.0"
