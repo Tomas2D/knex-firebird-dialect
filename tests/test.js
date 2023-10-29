@@ -20,6 +20,7 @@ const generateConfig = () => ({
   pool: { min: 1, max: 1 },
   createDatabaseIfNotExists: true,
   debug: false,
+  libraryPath: process.env.LIBRARY_PATH
 });
 
 describe("Basic operations", () => {

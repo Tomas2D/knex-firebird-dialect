@@ -53,6 +53,13 @@ class Client_Firebird extends Client {
   async acquireRawConnection() {
     assert(!this._connectionForTransactions);
 
+    // FIREBIRD_HOST="fsdm.farmsoft.cz"
+    // FIREBIRD_PORT="3050"
+    // FIREBIRD_USER="SYSDBA"
+    // FIREBIRD_PASSWORD="AgrosofT"
+    // FIREBIRD_POOL_SIZE="1"
+    // FIREBIRD_KRONOS_PATH="/var/lib/firebird/3.0/data/kronos/kronos.fdb"
+
     /** @type {import('node-firebird-driver-native').Client} client */
     const client = this.driver.createNativeClient(this.config.libraryPath || this._driver().getDefaultLibraryFilename())
     const databasePath = this.config.connection.database || this.config.connection.path

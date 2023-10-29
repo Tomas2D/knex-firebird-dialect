@@ -31,8 +31,9 @@ jobs:
 
     - name: Install Firebird
       run: |
-        sudo apt-get install libtommath1 libncurses5
+        sudo apt-get install libtommath1 libncurses5 musl-dev gcc
         sudo ln -sf /usr/lib/x86_64-linux-gnu/libtommath.so.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
+        sudo ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
         wget -nv -O Firebird-3.0.10.33601-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v3.0.10/Firebird-3.0.10.33601-0.amd64.tar.gz"
         tar xzvf Firebird-3.0.10.33601-0.amd64.tar.gz
         (cd Firebird-3.0.10.33601-0.amd64; sudo ./install.sh -silent)
@@ -45,11 +46,12 @@ jobs:
         sudo chown -R firebird:firebird .
         while ! nc -z localhost 3050; do sleep 1 ; done
         sleep 2
+        ldconfig -p | grep libfbclient
 
     - name: Tests
       run: |
         sudo mkdir coverage
         sudo chown -R firebird:firebird coverage
         sudo chmod -R 777 coverage
-        sg firebird -c "yarn global add env-cmd; env-cmd -f /opt/firebird/SYSDBA.password yarn test"
+        sg firebird -c "yarn global add env-cmd; LD_LIBRARY_PATH=/usr/lib64 env-cmd -f /opt/firebird/SYSDBA.password yarn test"
         bash <(curl -s https://codecov.io/bash)
