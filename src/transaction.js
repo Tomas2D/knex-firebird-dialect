@@ -1,63 +1,47 @@
-const debug = require("debug")("knex:tx");
 import Transaction from "knex/lib/execution/transaction";
 
 class Transaction_Firebird extends Transaction {
-  begin(conn) {
-    return new Promise((resolve, reject) => {
-      conn.transaction(
-        this.client.driver.ISOLATION_READ_COMMITED,
-        (error, transaction) => {
-          if (error) return reject(error);
-          conn._transaction = transaction;
-          resolve();
-        }
-      );
-    });
+  /**
+   * @param {import('node-firebird-driver-native').Attachment} conn
+   * @returns {Promise<unknown>}
+   */
+  async begin(conn) {
+    const transaction = await conn.startTransaction({
+      isolation: this.isolationLevel || 'READ_COMMITTED',
+      ...(this.readOnly && {
+        accessMode: 'READ_ONLY'
+      })
+    })
+    this._transaction = transaction
+    return transaction
   }
 
   savepoint() {
     throw new Error("savepoints not implemented");
   }
 
-  commit(conn, value) {
-    return this.query(conn, "commit", 1, value);
-  }
-
   release() {
     throw new Error("releasing savepoints not implemented");
   }
 
-  rollback(conn, error) {
-    return this.query(conn, "rollback", 2, error);
+  async commit(conn, value) {
+    this._completed = true
+    await this._transaction.commit()
+    this._resolver(value);
+  }
+
+  async rollback(conn, error) {
+    this._completed = true
+    if (error) {
+      this._rejecter(error);
+    } else {
+      await this._transaction.rollback()
+      this._resolver();
+    }
   }
 
   rollbackTo() {
     throw new Error("rolling back to savepoints not implemented");
-  }
-
-  query(conn, method, status, value) {
-    const q = new Promise((resolve, reject) => {
-      const transaction = conn._transaction;
-      transaction[method]((error) => {
-        delete conn._transaction;
-        if (error) return reject(error);
-        resolve();
-      });
-    })
-      .catch((error) => {
-        status = 2;
-        value = error;
-        this._completed = true;
-        debug("%s error running transaction query", this.txid);
-      })
-      .then(() => {
-        if (status === 1) this._resolver(value);
-        if (status === 2) this._rejecter(value);
-      });
-    if (status === 1 || status === 2) {
-      this._completed = true;
-    }
-    return q;
   }
 }
 

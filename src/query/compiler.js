@@ -60,6 +60,10 @@ class QueryCompiler_Firebird extends QueryCompiler {
     return "";
   }
 
+  truncate() {
+    throw new Error('Truncate SQL command does not exists in Firebird.')
+  }
+
   insert() {
     let sql = super.insert();
     if (sql === "") return sql;
@@ -78,20 +82,27 @@ class QueryCompiler_Firebird extends QueryCompiler {
   }
 
   _prepInsert(insertValues) {
-    const newValues = {};
+    if (Array.isArray(insertValues)) {
+      if (insertValues.length !== 1) {
+        throw new Error('Firebird does not support multiple insertions.')
+      }
+      insertValues = insertValues[0]
+    }
+
+    const newValue = {}
     for (const key in insertValues) {
-      if (insertValues.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(insertValues, key)) {
         const value = insertValues[key];
         if (typeof value !== "undefined") {
-          newValues[key] = value;
+          newValue[key] = value;
         }
       }
     }
-    return super._prepInsert(newValues);
+    return super._prepInsert(newValue);
   }
-  // Compiles a `columnInfo` query
+
   columnInfo() {
-    const column = this.single.columnInfo;
+    const column = this.getColumnName(this.single.columnInfo);
 
     // The user may have specified a custom wrapIdentifier function in the config. We
     // need to run the identifiers through that function, but not format them as
@@ -101,6 +112,7 @@ class QueryCompiler_Firebird extends QueryCompiler {
       identity
     );
 
+    const self = this
     return {
       sql: `
       select 
@@ -111,34 +123,41 @@ class QueryCompiler_Firebird extends QueryCompiler {
       from rdb$relation_fields rlf
       inner join rdb$fields fld on fld.rdb$field_name = rlf.rdb$field_source
       inner join rdb$types typ on typ.rdb$type = fld.rdb$field_type
-      where rdb$relation_name = '${table}'
+      where rdb$relation_name = '${table.toUpperCase()}'
       `,
-      output(resp) {
-        const [rows, fields] = resp;
-
-        const maxLengthRegex = /.*\((\d+)\)/;
-        const out = reduce(
+      output({ rows }) {
+        const result = reduce(
           rows,
-          function (columns, val) {
-            const name = val.NAME.trim();
+          function (columns, value) {
+            const name = self.getColumnName(value[self.getColumnName('name')].trim());
+
             columns[name] = {
-              type: val.TYPE.trim().toLowerCase(),
-              nullable: !val.NOT_NULL,
-              // ATSTODO: "defaultValue" não implementado
-              // defaultValue: null,
+              type: value[self.getColumnName('type')].trim().toLowerCase(),
+              nullable: !value[self.getColumnName('not_null')],
             };
 
-            if (val.MAX_LENGTH) {
-              columns[name] = val.MAX_LENGTH;
+            if (value.MAX_LENGTH) {
+              columns[name] = value.MAX_LENGTH;
             }
 
             return columns;
           },
           {}
         );
-        return (column && out[column]) || out;
+
+        if (column && !result[column]) {
+          throw new Error(`Specified column "${column}" was not found!`)
+        }
+        return column ? result[column] : result;
       },
     };
+  }
+
+  getColumnName(name) {
+    if (!name) {
+      return name
+    }
+    return this.client.config.connection.lowercase_keys ? name.toLowerCase() : name
   }
 }
 

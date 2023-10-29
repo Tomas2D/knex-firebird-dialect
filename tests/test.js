@@ -1,9 +1,8 @@
 import knexLib from "knex";
-import Firebird from "node-firebird";
 import client from "../src";
-import fs from "fs";
 import path from "path";
 import os from "os";
+import * as fs from "fs";
 
 const generateConfig = () => ({
   client,
@@ -21,34 +20,6 @@ const generateConfig = () => ({
   pool: { min: 1, max: 1 },
   createDatabaseIfNotExists: true,
   debug: false,
-});
-
-describe.skip("Test Node Firebird", () => {
-  const knexConfig = generateConfig();
-  let fb;
-
-  beforeAll((done) => {
-    Firebird.attachOrCreate(knexConfig.connection, (err, db) => {
-      expect(err).toBeUndefined();
-
-      fb = db;
-      done();
-    });
-  });
-
-  afterAll(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await new Promise((resolve) => fb.detach(resolve));
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
-  });
-
-  it("Simple select", (done) => {
-    fb.query("SELECT 1 FROM RDB$DATABASE", (err, res) => {
-      expect(res).toMatchSnapshot();
-      done();
-    });
-  });
 });
 
 describe("Basic operations", () => {
@@ -76,23 +47,25 @@ describe("Basic operations", () => {
       .createTable("users", function (table) {
         table.increments("id").primary();
         table.string("role").collate();
-        table.string("user_name", 100).comment('User Name');
+        table.string("user_name", 100).comment("User Name");
         table.binary("binary_data");
+        table.specificType("status", "char(1)");
       })
       .createTable("accounts", function (table) {
         table.increments("id").primary();
-        table.string("account_name").collate('utf8');
+        table.string("account_name").collate("utf8");
         table.integer("user_id").unsigned().references("users.id");
       });
 
     expect(await knex.schema.hasTable("users")).toBe(true);
     expect(await knex.schema.hasColumn("users", "id")).toBe(true);
+    expect(await knex.schema.hasColumn("users", "status")).toBe(true);
 
     expect(await knex.schema.hasTable("accounts")).toBe(true);
     expect(await knex.schema.hasColumn("accounts", "user_id")).toBe(true);
     expect(await knex.schema.hasColumn("accounts", "some_column")).toBe(false);
 
-    expect(await knex('users').columnInfo()).toBeTruthy()
+    expect(await knex("users").columnInfo()).toBeTruthy();
   });
 
   it("Not implemented functions", async () => {
@@ -101,8 +74,8 @@ describe("Basic operations", () => {
     await trx.commit();
     expect(trx.isCompleted()).toBe(true);
     await expect(() => trx.savepoint()).rejects.toThrow();
-    await expect(() => knex.schema.renameTable('X', 'Y')).rejects.toThrow();
-  })
+    await expect(() => knex.schema.renameTable("X", "Y")).rejects.toThrow();
+  });
 
   it("Insert data into tables", async () => {
     await new Promise((resolve) =>
@@ -115,6 +88,7 @@ describe("Basic operations", () => {
             user_name: "Tomáš 😎",
             role: "user",
             binary_data: Buffer.from("Binary data for Tomáš 😎"),
+            status: "A",
           })
           .into("users");
 
@@ -126,6 +100,7 @@ describe("Basic operations", () => {
             user_name: "Adam",
             role: "user",
             binary_data: Buffer.from("Binary data for Adam"),
+            status: "B",
           })
           .into("users");
         await knex
@@ -136,6 +111,7 @@ describe("Basic operations", () => {
             user_name: "Lucas",
             role: "user",
             binary_data: Buffer.from("Binary data for Lucas"),
+            status: "C",
           })
           .into("users");
 
@@ -167,8 +143,8 @@ describe("Basic operations", () => {
   });
 
   it("Sorting", async () => {
-    await expect(knex.distinct("id").from("users").orderBy("id", "desc")).resolves
-      .toMatchInlineSnapshot(`
+    await expect(knex.distinct("id").from("users").orderBy("id", "desc"))
+      .resolves.toMatchInlineSnapshot(`
       [
         {
           "id": 3,
@@ -204,12 +180,15 @@ describe("Basic operations", () => {
 
   it("Test limits", async () => {
     await expect(
-      knex("users")
-        .select("*")
-        .whereIn(['role'], ["user"])
-        .offset(2)
-        .limit(2)
+      knex("users").select("*").whereIn(["role"], ["user"]).offset(2).limit(2)
     ).resolves.toMatchSnapshot();
+  });
+
+  it("Select one", async () => {
+    const results = await knex("users").select("status");
+    for (const result of results) {
+      expect(result.status.length).toBe(1);
+    }
   });
 
   it("Select one", async () => {
@@ -250,6 +229,7 @@ describe("Basic operations", () => {
         },
         "id": 1,
         "role": "user",
+        "status": "A",
         "user_name": "Tomáš 😎",
       }
     `);

@@ -1,6 +1,4 @@
-import { defaults, map } from "lodash";
-import getStream from "get-stream";
-
+import {defaults, map} from "lodash";
 import assert from "assert";
 import Client from "knex/lib/client";
 
@@ -12,11 +10,12 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
-import { toArrayFromPrimitive } from "./utils";
+import { Blob } from 'node-firebird-driver-native'
+import * as fs from "fs";
 
 class Client_Firebird extends Client {
   _driver() {
-    return require("node-firebird");
+    return require("node-firebird-driver-native");
   }
 
   schemaCompiler() {
@@ -51,98 +50,92 @@ class Client_Firebird extends Client {
     return value;
   }
 
-  // Get a raw connection from the database, returning a promise with the connection object.
-  acquireRawConnection() {
+  async acquireRawConnection() {
     assert(!this._connectionForTransactions);
 
-    const driverConnectFn = this.config.createDatabaseIfNotExists
-      ? this.driver.attachOrCreate
-      : this.driver.attach;
+    /** @type {import('node-firebird-driver-native').Client} client */
+    const client = this.driver.createNativeClient(this.config.libraryPath || this._driver().getDefaultLibraryFilename())
+    const databasePath = this.config.connection.database || this.config.connection.path
 
-    return new Promise((resolve, reject) => {
-      let retryCount = 1, maxRetryCount = 3;
-      const connect = () => {
-        driverConnectFn(this.connectionSettings, (error, connection) => {
-          if (!error) {
-            return resolve(connection);
-          }
-
-          // Bug in the "node-firebird" library
-          // "Your user name and password are not defined. Ask your database administrator to set up a Firebird login."
-          if (String(error?.gdscode) === '335544472' && retryCount < maxRetryCount) {
-            retryCount++
-            return connect()
-          }
-          return reject(error);
-        });
+    if (this.config.createDatabaseIfNotExists) {
+      const dbExists = await fs.promises.stat(databasePath).then(() => false).catch(() => true)
+      if (dbExists) {
+          return await client.createDatabase(databasePath, this.config.connection)
       }
-      connect()
-    });
+    }
+
+    return await client.connect(databasePath, this.config.connection)
   }
 
-  // Used to explicitly close a connection, called internally by the pool when
-  // a connection times out or the pool is shutdown.
+  /**
+   * @param {import('node-firebird-driver-native').Attachment} connection
+   * @returns {Promise<unknown>}
+   */
   async destroyRawConnection(connection) {
-    return new Promise((resolve, reject) => {
-      connection.connection._socket.once("close", () => {
-        resolve();
-      });
-
-      connection.detach((err) => {
-        if (err) {
-          reject(err);
-        }
-
-        connection.connection._socket.destroy();
-      });
-    });
+    await connection.disconnect()
   }
 
-  // Runs the query on the specified connection, providing the bindings and any
-  // other necessary prep work.
-  _query(connection, obj) {
+  /**
+   * @param {import('node-firebird-driver-native').Attachment} connection
+   * @param obj
+   * @returns {Promise<unknown>}
+   * @private
+   */
+  async _query(connection, obj) {
     if (!obj || typeof obj === "string") {
       obj = { sql: obj };
     }
-    return new Promise(function (resolver, rejecter) {
-      if (!connection) {
-        return rejecter(
-          new Error(`Error calling ${obj.method} on connection.`)
-        );
+    if (!connection) {
+      throw new Error(`Error calling ${obj.method} on connection.`)
+    }
+
+    const { sql } = obj;
+    if (!sql) {
+      return
+    }
+
+    if (connection._transaction) {
+      throw new Error('this should never happen!')
+    }
+
+    const transaction = await connection.startTransaction();
+    const statement = await connection.prepare(transaction, sql);
+
+    try {
+      let fResponse = {
+        rows: [],
+        fields: []
+      }
+      if (obj.returning && !statement.hasResultSet) {
+        const response = await statement.executeSingletonAsObject(transaction, obj.bindings)
+        fResponse.rows = [Object.values(response)]
+        fResponse.fields = Object.keys(response)
+      } else if (statement.hasResultSet) {
+        const response = await statement.executeQuery(transaction, obj.bindings);
+        const [rows, fields] = await Promise.all([
+          response.fetch(),
+          statement.columnLabels
+        ])
+        fResponse.rows = rows
+        fResponse.fields = fields
+      } else {
+        await statement.execute(transaction, obj.bindings)
       }
 
-      const { sql } = obj;
-      if (!sql) {
-        return resolver();
+
+      await this._fixResponse(fResponse, transaction)
+      return {
+        ...obj,
+        response: fResponse
       }
-      const c = connection._transaction || connection;
-      c.query(sql, obj.bindings, (error, rows, fields) => {
-        if (error) {
-          return rejecter(error);
-        }
-        obj.response = [rows, fields];
-        resolver(obj);
-      });
-    });
+    } finally {
+      await transaction.commit()
+      await statement.dispose();
+    }
   }
 
   _stream() {
-    throw new Error("_stream not implemented");
-    // const client = this;
-    // return new Promise(function (resolver, rejecter) {
-    //   stream.on('error', rejecter);
-    //   stream.on('end', resolver);
-    //   return client
-    //     ._query(connection, sql)
-    //     .then((obj) => obj.response)
-    //     .then((rows) => rows.forEach((row) => stream.write(row)))
-    //     .catch(function (err) {
-    //       stream.emit('error', err);
-    //     })
-    //     .then(function () {
-    //       stream.end();
-    //     });
-    // });
+     throw new Error("_stream not implemented");
   }
 
   // Ensures the response is returned in the same format as other clients.
@@ -155,10 +148,10 @@ class Client_Firebird extends Client {
       return obj.output.call(runner, response);
     }
 
-    const [rows, fields] = response;
-    await this._fixBlobCallbacks(rows, fields);
-
+    const { rows } = response;
     switch (method) {
+      case "select":
+        return rows;
       case "first":
         return rows[0];
       case "pluck":
@@ -168,59 +161,50 @@ class Client_Firebird extends Client {
     }
   }
 
-  /**
-   * The Firebird library returns BLOBs with callback function, convert to buffer
-   * @param {*} rows
-   * @param {*} fields
-   */
-  async _fixBlobCallbacks(rows /* fields */) {
-    if (!rows) {
-      return rows;
+  async _fixResponse(obj, transaction) {
+    const { rows, fields } = obj
+    if (this.config.connection.lowercase_keys) {
+      const newFields = fields.map(field => field.toLowerCase())
+      fields.length = 0
+      fields.push(...newFields)
     }
 
-    const blobEntries = [];
-
-    toArrayFromPrimitive(rows).forEach((row, rowIndex) => {
-      Object.entries(row).forEach(([colKey, colVal]) => {
-        if (colVal instanceof Function) {
-          blobEntries.push(
-            new Promise((resolve, reject) => {
-              colVal((err, name, emitter) => {
-                getStream.buffer(emitter).then((buffer) => {
-                  rows[rowIndex][colKey] = buffer;
-                  resolve();
-                }).catch(reject);
-              });
+    const blobs = [];
+    for (let i = 0; i < rows.length; i++) {
+      const row = {}
+      fields.forEach((key, index) => {
+        const value = rows[i][index]
+        if (value instanceof Blob) {
+          blobs.push(
+            value.attachment.openBlob(transaction, value).then(async (stream) => {
+              const buffer = Buffer.alloc(await stream.length)
+              await stream.read(buffer)
+              row[key] = buffer
             })
-          );
-        } else if (colVal instanceof Buffer) {
-          rows[rowIndex][colKey] = colVal.toString("utf8");
+          )
+        } else {
+          row[key] = value
         }
-      });
-    });
+      })
+      rows[i] = row
+    }
 
-    await Promise.all(blobEntries);
+    await Promise.all(blobs);
 
-    return rows;
+    return obj
   }
 
+  /**
+   * @param {import('node-firebird-driver-native').Attachment} db
+   * @returns {boolean}
+   */
   validateConnection(db) {
-    const { _isClosed, _isDetach, _socket, _isOpened } = db.connection;
-
-    if (_isClosed || _isDetach || !_socket || !_isOpened) {
-      return false;
-    }
-
-    return true;
+    return db.isValid
   }
 
   poolDefaults() {
     const options = { min: 2, max: 4 };
     return defaults(options, super.poolDefaults(this));
-  }
-
-  ping(resource, callback) {
-    resource.query("select 1 from RDB$DATABASE", callback);
   }
 
   ddl(compiler, pragma, connection) {

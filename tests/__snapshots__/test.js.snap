@@ -30,6 +30,7 @@ exports[`Basic operations Filtering 1`] = `
     },
     "id": 2,
     "role": "user",
+    "status": "B",
     "user_name": "Adam",
   },
 ]
@@ -73,6 +74,7 @@ exports[`Basic operations Insert data into tables 1`] = `
     },
     "id": 1,
     "role": "user",
+    "status": "A",
     "user_name": "Tomáš 😎",
   },
   {
@@ -103,6 +105,7 @@ exports[`Basic operations Insert data into tables 1`] = `
     },
     "id": 2,
     "role": "user",
+    "status": "B",
     "user_name": "Adam",
   },
   {
@@ -134,6 +137,7 @@ exports[`Basic operations Insert data into tables 1`] = `
     },
     "id": 3,
     "role": "user",
+    "status": "C",
     "user_name": "Lucas",
   },
 ]
@@ -189,15 +193,8 @@ exports[`Basic operations Test limits 1`] = `
     },
     "id": 3,
     "role": "user",
+    "status": "C",
     "user_name": "Lucas",
-  },
-]
-`;
-
-exports[`Test Node Firebird Simple select 1`] = `
-[
-  {
-    "constant": 1,
   },
 ]
 `;

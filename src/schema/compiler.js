@@ -12,16 +12,15 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
       .wrap(prefixedTableName(this.schema, String(tableName)))
       .toUpperCase();
 
-    const sql = `select 1 as x from rdb$relations where rdb$relation_name = '${fullTableName}'`;
+    const sql = `select 1 from rdb$relations where rdb$relation_name = '${fullTableName}'`;
     this.pushQuery({
       sql,
-      output: (raw) => {
-        const result = flatten(raw).shift();
-        if (!result || !(result instanceof Object)) {
-          return;
+      output: ({ rows, fields }) => {
+        if (!rows || rows.length === 0) {
+          return false
         }
-
-        return Number(result.x) === 1;
+        const key = fields[0]
+        return Number(rows[0][key]) === 1;
       },
     });
   }
@@ -30,21 +29,28 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
   hasColumn(tableName, column) {
     this.pushQuery({
       sql:
-        `select i.rdb$field_name as "Field" from ` +
+        `select i.rdb$field_name as "field" from ` +
         `rdb$relations r join rdb$RELATION_FIELDS i ` +
         `on (i.rdb$relation_name = r.rdb$relation_name) ` +
         `where r.rdb$relation_name = '${this.formatter.wrap(
           tableName.toUpperCase()
         )}'`,
-      output(resp) {
-        return some(flatten(resp), (col) => {
-          return (
-            this.client.wrapIdentifier(col.field.trim().toLowerCase()) ===
-            this.client.wrapIdentifier(column.trim().toLowerCase())
-          );
-        });
+      output({ rows, fields }) {
+        const key = fields[0].trim()
+        const target = column.trim().toLowerCase()
+        for (const row of rows) {
+          if (row[key].trim().toLowerCase() === target) {
+            return true
+          }
+        }
+        return false
       },
     });
+  }
+
+  getColumnName() {
+    const name = super.getColumnName(arguments)
+    return this.client.config.connection.lowercase_keys ? name.toLowerCase() : name
   }
 
   dropTableIfExists(tableName) {
@@ -73,5 +79,7 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
 function prefixedTableName(prefix, table) {
   return prefix ? `${prefix}.${table}` : table;
 }
+
+SchemaCompiler_Firebird.prototype.lowerCase = true;
 
 export default SchemaCompiler_Firebird;
