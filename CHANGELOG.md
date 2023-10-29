@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="2.0.0-alpha.2"></a>
+## 2.0.0-alpha.2 (2023-10-29)
+
+### Fixed
+
+- 🐛 Fix driver name [[d95c93c](https://github.com/Tomas2D/knex-firebird-dialect/commit/d95c93cf8af74613bd945138d1d63946503500d6)]
+- 💚 Fix Ubuntu Version [[795c937](https://github.com/Tomas2D/knex-firebird-dialect/commit/795c9379a9b8a87f54805d2671bd46077add3982)]
+
+
 <a name="2.0.0-alpha.1"></a>
 ## 2.0.0-alpha.1 (2023-10-29)
 
