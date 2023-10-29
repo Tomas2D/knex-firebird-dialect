@@ -1,5 +1,12 @@
 # Changelog
 
+<a name="2.0.0-alpha.1"></a>
+## 2.0.0-alpha.1 (2023-10-29)
+
+### Fixed
+
+- 🐛 Handle connection to external database [[8e53caf](https://github.com/Tomas2D/knex-firebird-dialect/commit/8e53caf50e440be4d21d5db8593c18d7d60cc370)]
+
 <a name="2.0.0-alpha.0"></a>
 ## 2.0.0-alpha.0 (2023-10-29)
 
