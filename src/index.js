@@ -34,7 +34,7 @@ class Client_Firebird extends Client {
   }
 
   _driver() {
-    return require("node-firebird-driver-native");
+    return require(this.driverName);
   }
 
   schemaCompiler() {
@@ -72,7 +72,8 @@ class Client_Firebird extends Client {
   async acquireRawConnection() {
     assert(!this._connectionForTransactions);
 
-    const client = this.driver.createNativeClient(this.config.libraryPath || this._driver().getDefaultLibraryFilename())
+    const driver = this._driver()
+    const client = driver.createNativeClient(this.config.libraryPath || driver.getDefaultLibraryFilename())
 
     const databasePath = this.config.connection.database
     const getConnectionString = () => {
@@ -249,7 +250,7 @@ class Client_Firebird extends Client {
 
 Object.assign(Client_Firebird.prototype, {
   dialect: "firebird",
-  driverName: "node-firebird",
+  driverName: "node-firebird-driver-native",
 
   Firebird_Formatter,
 });
