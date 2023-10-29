@@ -9,7 +9,7 @@ const generateConfig = () => ({
   connection: {
     host: "127.0.0.1",
     port: 3050,
-    user: process.env.ISC_USER || "SYSDBA",
+    username: process.env.ISC_USER || "SYSDBA",
     password: process.env.ISC_PASSWORD || "masterkey",
     database: path.join(
       os.tmpdir(),

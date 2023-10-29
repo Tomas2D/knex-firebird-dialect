@@ -10,10 +10,29 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
-import { Blob } from 'node-firebird-driver-native'
-import * as fs from "fs";
 
 class Client_Firebird extends Client {
+  constructor(config = {}, ...args) {
+    if (!config.connection) {
+      throw new Error('Missing "connection" property in configuration!')
+    }
+
+    const customConfig = {...config, connection: { ...config.connection}}
+    if (customConfig.connection.user) {
+      customConfig.connection.username = customConfig.connection.user
+      delete customConfig.connection.user
+    }
+
+    if (!customConfig.connection.database) {
+      throw new Error('Database path is missing!')
+    }
+    if (customConfig.connection.database[0] !== '/') {
+      customConfig.connection.database = `/${customConfig.connection.database}`
+    }
+
+    super(customConfig, ...args);
+  }
+
   _driver() {
     return require("node-firebird-driver-native");
   }
@@ -53,25 +72,34 @@ class Client_Firebird extends Client {
   async acquireRawConnection() {
     assert(!this._connectionForTransactions);
 
-    // FIREBIRD_HOST="fsdm.farmsoft.cz"
-    // FIREBIRD_PORT="3050"
-    // FIREBIRD_USER="SYSDBA"
-    // FIREBIRD_PASSWORD="AgrosofT"
-    // FIREBIRD_POOL_SIZE="1"
-    // FIREBIRD_KRONOS_PATH="/var/lib/firebird/3.0/data/kronos/kronos.fdb"
-
-    /** @type {import('node-firebird-driver-native').Client} client */
     const client = this.driver.createNativeClient(this.config.libraryPath || this._driver().getDefaultLibraryFilename())
-    const databasePath = this.config.connection.database || this.config.connection.path
 
-    if (this.config.createDatabaseIfNotExists) {
-      const dbExists = await fs.promises.stat(databasePath).then(() => false).catch(() => true)
-      if (dbExists) {
-          return await client.createDatabase(databasePath, this.config.connection)
-      }
+    const databasePath = this.config.connection.database
+    const getConnectionString = () => {
+      const {
+        host,
+        port
+      } = this.config.connection
+
+      const target = [host, port].filter(Boolean).join('/')
+      return [target, databasePath].filter(Boolean).join(':')
     }
 
-    return await client.connect(databasePath, this.config.connection)
+    const uri = getConnectionString()
+    const connect = () => client.connect(uri, this.config.connection)
+    const connectWithCreate = () => client.createDatabase(uri, this.config.connection)
+
+    if (this.config.createDatabaseIfNotExists) {
+      try {
+        return await connectWithCreate()
+      } catch (e) {
+        if (String(e).includes('I/O error during "open O_CREAT"')) {
+          return await connect()
+        }
+        throw e
+      }
+    }
+    return await connect()
   }
 
   /**
@@ -181,7 +209,7 @@ class Client_Firebird extends Client {
       const row = {}
       fields.forEach((key, index) => {
         const value = rows[i][index]
-        if (value instanceof Blob) {
+        if (value instanceof this._driver().Blob) {
           blobs.push(
             value.attachment.openBlob(transaction, value).then(async (stream) => {
               const buffer = Buffer.alloc(await stream.length)
