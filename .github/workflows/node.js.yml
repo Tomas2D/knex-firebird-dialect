@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-20.04]
         node-version: [16.x]
 
     steps:
@@ -46,7 +46,6 @@ jobs:
         sudo chown -R firebird:firebird .
         while ! nc -z localhost 3050; do sleep 1 ; done
         sleep 2
-        ldconfig -p | grep libfbclient
 
     - name: Tests
       run: |
