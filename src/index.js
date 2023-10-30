@@ -11,6 +11,8 @@ import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
 
+import * as driver from 'node-firebird-driver-native'
+
 class Client_Firebird extends Client {
   constructor(config = {}, ...args) {
     if (!config.connection) {
@@ -34,7 +36,7 @@ class Client_Firebird extends Client {
   }
 
   _driver() {
-    return require(this.driverName);
+    return driver;
   }
 
   schemaCompiler() {
