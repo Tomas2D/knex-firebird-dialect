@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="2.0.0-alpha.3"></a>
+## 2.0.0-alpha.3 (2023-10-30)
+
+### Fixed
+
+- 🐛 Change driver import [[89d48a9](https://github.com/Tomas2D/knex-firebird-dialect/commit/89d48a91c6e3a2acfe5c265f946fd7383cd5df61)]
+
+
 <a name="2.0.0-alpha.2"></a>
 ## 2.0.0-alpha.2 (2023-10-29)
 
