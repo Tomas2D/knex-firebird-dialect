@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       uses: borales/actions-yarn@v3
       with:
-        cmd: install --frozen-lockfile --production=false
+        cmd: install --production=false
 
     - name: Build
       uses: borales/actions-yarn@v3
@@ -31,16 +31,13 @@ jobs:
 
     - name: Install Firebird
       run: |
-        sudo apt-get install libtommath1 libncurses5 musl-dev gcc
+        sudo apt-get install libtommath1 libncurses5 musl-dev gcc build-essential
         sudo ln -sf /usr/lib/x86_64-linux-gnu/libtommath.so.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
         sudo ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
-        wget -nv -O Firebird-3.0.10.33601-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v3.0.10/Firebird-3.0.10.33601-0.amd64.tar.gz"
-        tar xzvf Firebird-3.0.10.33601-0.amd64.tar.gz
-        (cd Firebird-3.0.10.33601-0.amd64; sudo ./install.sh -silent)
+        wget -nv -O Firebird-4.0.2.2816-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v4.0.2/Firebird-4.0.2.2816-0.amd64.tar.gz"
+        tar xzvf Firebird-4.0.2.2816-0.amd64.tar.gz
+        (cd Firebird-4.0.2.2816-0.amd64; sudo ./install.sh -silent)
         sudo usermod -a -G firebird `whoami`
-        echo 'WireCrypt = Enabled' | sudo tee -a /opt/firebird/firebird.conf > /dev/null
-        sudo killall firebird
-        sudo systemctl start firebird-superserver.service
         sudo chown root:firebird /opt/firebird/SYSDBA.password
         sudo chmod 440 /opt/firebird/SYSDBA.password
         sudo chown -R firebird:firebird .
