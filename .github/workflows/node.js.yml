@@ -31,7 +31,7 @@ jobs:
 
     - name: Install Firebird
       run: |
-        sudo apt-get install libtommath1 libncurses5 musl-dev gcc build-essential
+        sudo apt-get install libtommath1 libtomcrypt1 libncurses5 musl-dev gcc build-essential
         sudo ln -sf /usr/lib/x86_64-linux-gnu/libtommath.so.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
         sudo ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
         wget -nv -O Firebird-4.0.2.2816-0.amd64.tar.gz "https://github.com/FirebirdSQL/firebird/releases/download/v4.0.2/Firebird-4.0.2.2816-0.amd64.tar.gz"
