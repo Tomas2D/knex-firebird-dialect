@@ -150,12 +150,16 @@ class Client_Firebird extends Client {
         fResponse.fields = Object.keys(response)
       } else if (statement.hasResultSet) {
         const response = await statement.executeQuery(transaction, obj.bindings);
-        const [rows, fields] = await Promise.all([
-          response.fetch(),
-          statement.columnLabels
-        ])
-        fResponse.rows = rows
-        fResponse.fields = fields
+        try {
+          const [rows, fields] = await Promise.all([
+            response.fetch(),
+            statement.columnLabels || []
+          ])
+          fResponse.rows = rows
+          fResponse.fields = fields
+        } finally {
+          await response.close()
+        }
       } else {
         await statement.execute(transaction, obj.bindings)
       }
