@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="2.0.0-alpha.4"></a>
+## 2.0.0-alpha.4 (2023-11-02)
+
+### Fixed
+
+- 💚 Switch to latest ubuntu version [[38705fe](https://github.com/Tomas2D/knex-firebird-dialect/commit/38705fe8d758a6a53942d698298c087ddc9fc2e3)]
+- 🐛 Close resultSet [[d938382](https://github.com/Tomas2D/knex-firebird-dialect/commit/d938382c1283937abe4ba763b9afe4849f3d3dec)]
+- 💚 Run tests against Firebird V4 instead of V3 [[2efff44](https://github.com/Tomas2D/knex-firebird-dialect/commit/2efff444441c44c446490c6368e3a3f1a66f9b9f)]
+
+
 <a name="2.0.0-alpha.3"></a>
 ## 2.0.0-alpha.3 (2023-10-30)
 
