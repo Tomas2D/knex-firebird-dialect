@@ -96,7 +96,8 @@ class Client_Firebird extends Client {
       try {
         return await connectWithCreate()
       } catch (e) {
-        if (String(e).includes('I/O error during "open O_CREAT"')) {
+        const errMsg = String(e)
+        if (['I/O error during "open O_CREAT"', 'DATABASE is in use'].some(msg => errMsg.includes(msg))) {
           return await connect()
         }
         throw e
