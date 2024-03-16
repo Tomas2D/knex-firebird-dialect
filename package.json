@@ -1,6 +1,6 @@
 {
   "name": "knex-firebird-dialect",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Knex dialect for Firebird",
   "main": "lib/index.js",
   "scripts": {
@@ -45,11 +45,11 @@
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest": "^27.6.0",
-    "husky": "9.0.11",
+    "husky": "8.0.3",
     "jest": "^29.7.0",
     "knex": "^3.0.1",
-    "prettier": "^2.6.2",
-    "node-firebird-driver-native": "^3.1.0"
+    "node-firebird-driver-native": "^3.1.0",
+    "prettier": "^2.6.2"
   },
   "peerDependencies": {
     "knex": ">=0.95.15"
