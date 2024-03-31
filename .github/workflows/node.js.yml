@@ -8,26 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [16.x]
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Install dependencies
-      uses: borales/actions-yarn@v3
+    - uses: actions/checkout@v4
+    - name: Setup node
+      uses: actions/setup-node@v4
       with:
-        cmd: install --production=false
+        node-version-file: '.nvmrc'
+    - name: Install dependencies
+      run: npm ci
 
     - name: Build
-      uses: borales/actions-yarn@v3
-      with:
-        cmd: build
+      run: npm run build
 
     - name: Install Firebird
       run: |
@@ -49,5 +43,6 @@ jobs:
         sudo mkdir coverage
         sudo chown -R firebird:firebird coverage
         sudo chmod -R 777 coverage
-        sg firebird -c "yarn global add env-cmd; LD_LIBRARY_PATH=/usr/lib64 env-cmd -f /opt/firebird/SYSDBA.password yarn test"
+        npm install -g env-cmd
+        sg firebird -c "LD_LIBRARY_PATH=/usr/lib64 env-cmd -f /opt/firebird/SYSDBA.password npm run test"
         bash <(curl -s https://codecov.io/bash)

@@ -6,12 +6,12 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "jest --detectOpenHandles --forceExit --runInBand",
-    "prepublishOnly": "yarn run build",
+    "prepublishOnly": "npm run build",
     "lint": "eslint --fix \"{src,tests}/**/*.js\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "changelog": "npx gitmoji-changelog",
-    "release": "yarn version",
-    "version": "yarn changelog && code --wait CHANGELOG.md && git add README.md CHANGELOG.md"
+    "release": "npm run version",
+    "version": "npm run changelog && code --wait CHANGELOG.md && git add README.md CHANGELOG.md"
   },
   "keywords": [
     "node",
@@ -59,7 +59,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn format"
+      "pre-commit": "npm run lint && npm run format"
     }
   },
   "files": [
