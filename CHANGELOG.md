@@ -1,5 +1,26 @@
 # Changelog
 
+<a name="2.0.2"></a>
+## 2.0.2 (2024-03-31)
+
+### Fixed
+
+- 🐛 Destroy the connection in case of a network failure [[e6689be](https://github.com/Tomas2D/knex-firebird-dialect/commit/e6689be555dd9776b5819f16c84999a839ab5dc9)]
+
+### Miscellaneous
+
+-  Bump @babel/core from 7.24.0 to 7.24.3 [[8504120](https://github.com/Tomas2D/knex-firebird-dialect/commit/8504120dd126c399616dec45cde374afe9fe89b1)]
+-  Bump @babel/plugin-transform-runtime from 7.24.0 to 7.24.3 [[c72b538](https://github.com/Tomas2D/knex-firebird-dialect/commit/c72b538a554d82406dd44910bc70bf4b91cb840d)]
+-  Bump @babel/runtime from 7.24.0 to 7.24.1 [[f3037b7](https://github.com/Tomas2D/knex-firebird-dialect/commit/f3037b76d076776ef2a9ee633e27d6a18b79a00e)]
+-  Bump @babel/preset-env from 7.24.0 to 7.24.3 [[e6013e3](https://github.com/Tomas2D/knex-firebird-dialect/commit/e6013e3e5d9268cb160e2e625c1bc19e973f7fd3)]
+-  Merge pull request [#297](https://github.com/Tomas2D/knex-firebird-dialect/issues/297) from Tomas2D/dependabot/npm_and_yarn/husky-9.0.11 [[4b21de2](https://github.com/Tomas2D/knex-firebird-dialect/commit/4b21de2ecc221e55be24fffcca11f5c41c359b3c)]
+-  Merge pull request [#301](https://github.com/Tomas2D/knex-firebird-dialect/issues/301) from Tomas2D/dependabot/npm_and_yarn/babel/cli-7.24.1 [[7b80d08](https://github.com/Tomas2D/knex-firebird-dialect/commit/7b80d08d724dcef3f6bd270fe9348087bd362823)]
+-  Bump @babel/cli from 7.23.9 to 7.24.1 [[be4158d](https://github.com/Tomas2D/knex-firebird-dialect/commit/be4158de5e5b23ca5b9ca560aacde6a9e6f5bc49)]
+-  Bump husky from 8.0.3 to 9.0.11 [[f1ba116](https://github.com/Tomas2D/knex-firebird-dialect/commit/f1ba1163b3c060b8936e862db2dafe2c46659706)]
+- 🏗️ Switch from yarn to npm [[621f19c](https://github.com/Tomas2D/knex-firebird-dialect/commit/621f19ceb5780cf21b01752206c865ae5324a002)]
+- ⬇️ Husky 8.x [[4801888](https://github.com/Tomas2D/knex-firebird-dialect/commit/480188853d56d107c0235d805b3d0a9818058bbb)]
+
+
 <a name="2.0.1"></a>
 ## 2.0.1 (2024-03-02)
 
