@@ -1,4 +1,4 @@
-import {defaults, map} from "lodash";
+import {defaults, map, noop} from "lodash";
 import assert from "assert";
 import Client from "knex/lib/client";
 
@@ -137,10 +137,11 @@ class Client_Firebird extends Client {
       throw new Error('this should never happen!')
     }
 
-    const transaction = await connection.startTransaction();
-    const statement = await connection.prepare(transaction, sql);
+    let transaction, statement;
 
     try {
+      transaction = await connection.startTransaction();
+      statement = await connection.prepare(transaction, sql);
       let fResponse = {
         rows: [],
         fields: []
@@ -167,13 +168,26 @@ class Client_Firebird extends Client {
 
 
       await this._fixResponse(fResponse, transaction)
+      await transaction.commit()
+
       return {
         ...obj,
         response: fResponse
       }
+    } catch (e) {
+      if (transaction) {
+        await transaction.rollback().catch(noop);
+        transaction = null
+      }
+      if (String(e).includes('Error writing data to the connection.')) {
+        await this.destroyRawConnection(connection)
+      }
+      throw e
     } finally {
-      await transaction.commit()
-      await statement.dispose();
+      if (statement) {
+        await statement.dispose().catch(noop);
+        statement = null
+      }
     }
   }
 
