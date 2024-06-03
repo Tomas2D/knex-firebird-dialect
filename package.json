@@ -42,7 +42,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.23.0",
     "@babel/plugin-transform-runtime": "^7.23.2",
     "@babel/preset-env": "^7.23.2",
-    "eslint": "^8.52.0",
+    "eslint": "^9.4.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest": "^28.2.0",
     "husky": "9.0.11",
