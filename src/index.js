@@ -26,10 +26,7 @@ class Client_Firebird extends Client {
     }
 
     if (!customConfig.connection.database) {
-      throw new Error('Database path is missing!')
-    }
-    if (customConfig.connection.database[0] !== '/') {
-      customConfig.connection.database = `/${customConfig.connection.database}`
+      throw new Error('Database path/alias is missing!')
     }
 
     super(customConfig, ...args);
