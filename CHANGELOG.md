@@ -1,5 +1,32 @@
 # Changelog
 
+<a name="2.0.4"></a>
+## 2.0.4 (2024-09-04)
+
+### Fixed
+
+- 🐛 return response object for raw queries [[27ede82](https://github.com/Tomas2D/knex-firebird-dialect/commit/27ede829ff5933335a8df376868ea44f928330d6)]
+
+### Miscellaneous
+
+-  Merge pull request [#376](https://github.com/Tomas2D/knex-firebird-dialect/issues/376) from Tomas2D/dependabot/npm_and_yarn/eslint-plugin-jest-28.8.2 [[e0a7b81](https://github.com/Tomas2D/knex-firebird-dialect/commit/e0a7b813cc2fdd6e3c44684c06b27b8081cfd4f7)]
+-  Bump eslint-plugin-jest from 28.8.1 to 28.8.2 [[d17fb68](https://github.com/Tomas2D/knex-firebird-dialect/commit/d17fb6816ac1fd2ba7e87e4dfb5bfbb5b58e6874)]
+-  Merge pull request [#375](https://github.com/Tomas2D/knex-firebird-dialect/issues/375) from Tomas2D/dependabot/npm_and_yarn/babel/cli-7.25.6 [[888b924](https://github.com/Tomas2D/knex-firebird-dialect/commit/888b924efc01acdcdbf19415494c5129d3ead8ed)]
+-  Bump @babel/cli from 7.24.8 to 7.25.6 [[df0c4ad](https://github.com/Tomas2D/knex-firebird-dialect/commit/df0c4ad34dcf0b046cbd023303b9ad3e7cb343a1)]
+-  Merge pull request [#367](https://github.com/Tomas2D/knex-firebird-dialect/issues/367) from Tomas2D/dependabot/npm_and_yarn/husky-9.1.5 [[f19d715](https://github.com/Tomas2D/knex-firebird-dialect/commit/f19d71569f118aad3bb128def66f78e172f7e499)]
+-  Merge pull request [#368](https://github.com/Tomas2D/knex-firebird-dialect/issues/368) from Tomas2D/dependabot/npm_and_yarn/babel/preset-env-7.25.4 [[656affc](https://github.com/Tomas2D/knex-firebird-dialect/commit/656affc900256323f5cd315994f1cedadc7e0f80)]
+-  Merge pull request [#372](https://github.com/Tomas2D/knex-firebird-dialect/issues/372) from Tomas2D/dependabot/npm_and_yarn/eslint-9.9.1 [[a82507f](https://github.com/Tomas2D/knex-firebird-dialect/commit/a82507f5d4117852759358657648613a01192609)]
+-  Merge pull request [#373](https://github.com/Tomas2D/knex-firebird-dialect/issues/373) from Tomas2D/dependabot/npm_and_yarn/eslint-plugin-jest-28.8.1 [[99b18ef](https://github.com/Tomas2D/knex-firebird-dialect/commit/99b18efcd49a51eb2222d6b0bd5cff7ff2c819c6)]
+-  Merge pull request [#374](https://github.com/Tomas2D/knex-firebird-dialect/issues/374) from Tomas2D/dependabot/npm_and_yarn/babel/runtime-7.25.6 [[4d517e8](https://github.com/Tomas2D/knex-firebird-dialect/commit/4d517e8301fea3d9d563f38c2a4efa5136fc2771)]
+-  Bump eslint from 9.9.0 to 9.9.1 [[1bfb26a](https://github.com/Tomas2D/knex-firebird-dialect/commit/1bfb26a50def708610a2c8a5bcbace9cd28fafaf)]
+-  Bump @babel/runtime from 7.25.4 to 7.25.6 [[6dc42c3](https://github.com/Tomas2D/knex-firebird-dialect/commit/6dc42c3dd16032a442eda30e683f78f21b3d64f7)]
+-  Bump eslint-plugin-jest from 28.8.0 to 28.8.1 [[ebc8bb7](https://github.com/Tomas2D/knex-firebird-dialect/commit/ebc8bb7301f189a79cb6e383c246078f4f856ec6)]
+-  Merge pull request [#369](https://github.com/Tomas2D/knex-firebird-dialect/issues/369) from Tomas2D/dependabot/npm_and_yarn/babel/plugin-transform-runtime-7.25.4 [[39803b4](https://github.com/Tomas2D/knex-firebird-dialect/commit/39803b4bff51543b5212fd828e5b867953991292)]
+-  Bump @babel/plugin-transform-runtime from 7.24.7 to 7.25.4 [[949e1f3](https://github.com/Tomas2D/knex-firebird-dialect/commit/949e1f36d06beb799d6adc7f84cfe3c10044676b)]
+-  Bump @babel/preset-env from 7.25.3 to 7.25.4 [[8a56bcf](https://github.com/Tomas2D/knex-firebird-dialect/commit/8a56bcfec3561fa6a7c46464f72407a5b4c6a1fb)]
+-  Bump husky from 9.1.4 to 9.1.5 [[37131f4](https://github.com/Tomas2D/knex-firebird-dialect/commit/37131f4d516db468c2b9b5e60c9f216e12fbad3e)]
+
+
 <a name="2.0.3"></a>
 ## 2.0.3 (2024-08-24)
 
