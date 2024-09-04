@@ -211,7 +211,7 @@ class Client_Firebird extends Client {
       case "pluck":
         return map(rows, obj.pluck);
       default:
-        return rows;
+        return response;
     }
   }
 
