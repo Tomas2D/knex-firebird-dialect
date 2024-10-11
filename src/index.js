@@ -10,7 +10,7 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
-
+import { isFirebirdConnectionError } from './utils'
 import * as driver from 'node-firebird-driver-native'
 
 class Client_Firebird extends Client {
@@ -176,7 +176,7 @@ class Client_Firebird extends Client {
         await transaction.rollback().catch(noop);
         transaction = null
       }
-      if (String(e).includes('Error writing data to the connection.')) {
+      if (isFirebirdConnectionError(e)) {
         await this.destroyRawConnection(connection)
       }
       throw e
