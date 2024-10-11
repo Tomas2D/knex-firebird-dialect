@@ -1,6 +1,6 @@
 {
   "name": "knex-firebird-dialect",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "Knex dialect for Firebird",
   "main": "lib/index.js",
   "scripts": {
