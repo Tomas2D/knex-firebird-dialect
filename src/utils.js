@@ -25,10 +25,5 @@ export function isFirebirdConnectionError(error) {
   }
 
   const msg = String(error)
-  for (const err in FirebirdConnectionErrors) {
-    if (msg.includes(err)) {
-      return true
-    }
-  }
-  return false
+  return Object.values(FirebirdConnectionErrors).some(err => msg.includes(err))
 }
