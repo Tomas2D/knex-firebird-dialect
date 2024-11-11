@@ -1,5 +1,34 @@
 # Changelog
 
+<a name="2.1.1"></a>
+## 2.1.1 (2024-11-11)
+
+### Fixed
+
+- 🐛 Correctly detects broken connection error message [[2227af7](https://github.com/Tomas2D/knex-firebird-dialect/commit/2227af7434502d4e3812f720e0f7ff91b767ccb2)]
+
+### Miscellaneous
+
+-  Merge pull request [#397](https://github.com/Tomas2D/knex-firebird-dialect/issues/397) from Tomas2D/dependabot/npm_and_yarn/babel/cli-7.25.9 [[d67f943](https://github.com/Tomas2D/knex-firebird-dialect/commit/d67f943970289310992a7a55a305e78cc69dd9b4)]
+-  Merge pull request [#404](https://github.com/Tomas2D/knex-firebird-dialect/issues/404) from Tomas2D/dependabot/npm_and_yarn/eslint-plugin-jest-28.9.0 [[386f57a](https://github.com/Tomas2D/knex-firebird-dialect/commit/386f57a8f4cec5b009f4366a3a3a37c89f475f43)]
+-  Bump eslint-plugin-jest from 28.8.3 to 28.9.0 [[757817c](https://github.com/Tomas2D/knex-firebird-dialect/commit/757817c248312e5693e2be35ef7d3f9910510bd1)]
+-  Merge pull request [#402](https://github.com/Tomas2D/knex-firebird-dialect/issues/402) from Tomas2D/dependabot/npm_and_yarn/babel/plugin-transform-runtime-7.25.9 [[2a91114](https://github.com/Tomas2D/knex-firebird-dialect/commit/2a911144087d16b224149e32f8ae1a97ce1c2228)]
+-  Bump @babel/plugin-transform-runtime from 7.25.7 to 7.25.9 [[6c0a50f](https://github.com/Tomas2D/knex-firebird-dialect/commit/6c0a50f50b1731b3c489e4db0cff396f6c72ea85)]
+-  Merge pull request [#396](https://github.com/Tomas2D/knex-firebird-dialect/issues/396) from Tomas2D/dependabot/npm_and_yarn/babel/eslint-parser-7.25.9 [[8919458](https://github.com/Tomas2D/knex-firebird-dialect/commit/891945862c61d90b09a02880c90cc9d87120dd70)]
+-  Merge pull request [#401](https://github.com/Tomas2D/knex-firebird-dialect/issues/401) from Tomas2D/dependabot/npm_and_yarn/babel/preset-env-7.26.0 [[480cb5b](https://github.com/Tomas2D/knex-firebird-dialect/commit/480cb5ba6d35ddd9e48ea2269960eac8c347b7b1)]
+-  Bump @babel/preset-env from 7.25.8 to 7.26.0 [[dc46868](https://github.com/Tomas2D/knex-firebird-dialect/commit/dc4686812ba675ae4f020520a0c18e19bbe6b32a)]
+-  Merge pull request [#400](https://github.com/Tomas2D/knex-firebird-dialect/issues/400) from Tomas2D/dependabot/npm_and_yarn/babel/runtime-7.26.0 [[b8d5e9c](https://github.com/Tomas2D/knex-firebird-dialect/commit/b8d5e9c569d877260c1cf20df60a12e70cf1a630)]
+-  Bump @babel/runtime from 7.25.7 to 7.26.0 [[cd0ff72](https://github.com/Tomas2D/knex-firebird-dialect/commit/cd0ff72bab70f7fddbe4d749d32578db7a9650db)]
+-  Bump @babel/cli from 7.25.7 to 7.25.9 [[ba062e7](https://github.com/Tomas2D/knex-firebird-dialect/commit/ba062e7cbf7da764d6255a665bed621828d29c40)]
+-  Bump @babel/eslint-parser from 7.25.8 to 7.25.9 [[07e95f2](https://github.com/Tomas2D/knex-firebird-dialect/commit/07e95f2fd8228e6203aaad97daf26d926e6bc452)]
+-  Merge pull request [#393](https://github.com/Tomas2D/knex-firebird-dialect/issues/393) from Tomas2D/dependabot/npm_and_yarn/eslint-9.13.0 [[5b682f2](https://github.com/Tomas2D/knex-firebird-dialect/commit/5b682f22855ceab6283295fce4240430eeb16354)]
+-  Bump eslint from 9.12.0 to 9.13.0 [[ba8fa2d](https://github.com/Tomas2D/knex-firebird-dialect/commit/ba8fa2d31e381733f1fd22729bcf807cc18bb152)]
+-  Merge pull request [#391](https://github.com/Tomas2D/knex-firebird-dialect/issues/391) from Tomas2D/dependabot/npm_and_yarn/babel/eslint-parser-7.25.8 [[b892155](https://github.com/Tomas2D/knex-firebird-dialect/commit/b892155153f2dd88e0dbe2e8d2e2c234d5aa7a1c)]
+-  Merge pull request [#392](https://github.com/Tomas2D/knex-firebird-dialect/issues/392) from Tomas2D/dependabot/npm_and_yarn/babel/core-7.25.8 [[adbfd8b](https://github.com/Tomas2D/knex-firebird-dialect/commit/adbfd8b6c3c10e1e1913260ac2b6e4570b25be0d)]
+-  Bump @babel/core from 7.25.7 to 7.25.8 [[f424ee4](https://github.com/Tomas2D/knex-firebird-dialect/commit/f424ee4034ed2af7fd628c9430bbb5b690fc1257)]
+-  Bump @babel/eslint-parser from 7.25.1 to 7.25.8 [[2920cd3](https://github.com/Tomas2D/knex-firebird-dialect/commit/2920cd3cd1585af112b0b4848378343f5a90f9bf)]
+
+
 <a name="2.1.0"></a>
 ## 2.1.0 (2024-10-11)
 
