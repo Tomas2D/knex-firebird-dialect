@@ -17,11 +17,14 @@ export const FirebirdConnectionErrors = {
 }
 
 export function isFirebirdConnectionError(error) {
-  if (!error || !(error instanceof Error)) {
+  if (!error) {
     return false
   }
-  if (String(error.code) in FirebirdConnectionErrors) {
-    return true
+
+  if (error instanceof Error || typeof error === "object") {
+    if (String(error?.code) in FirebirdConnectionErrors) {
+      return true
+    }
   }
 
   const msg = String(error)
