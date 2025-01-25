@@ -25,6 +25,8 @@ jobs:
 
     - name: Install Firebird
       run: |
+        sudo bash -c 'echo "deb http://security.ubuntu.com/ubuntu focal-security main universe" > /etc/apt/sources.list.d/ubuntu-focal-sources.list'
+        sudo apt-get update
         sudo apt-get install libtommath1 libtomcrypt1 libncurses5 musl-dev gcc build-essential
         sudo ln -sf /usr/lib/x86_64-linux-gnu/libtommath.so.1 /usr/lib/x86_64-linux-gnu/libtommath.so.0
         sudo ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
@@ -32,6 +34,7 @@ jobs:
         tar xzvf Firebird-4.0.2.2816-0.amd64.tar.gz
         (cd Firebird-4.0.2.2816-0.amd64; sudo ./install.sh -silent)
         sudo usermod -a -G firebird `whoami`
+        sudo gpasswd -r firebird
         sudo chown root:firebird /opt/firebird/SYSDBA.password
         sudo chmod 440 /opt/firebird/SYSDBA.password
         sudo chown -R firebird:firebird .
