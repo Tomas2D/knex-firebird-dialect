@@ -211,7 +211,7 @@ class Client_Firebird extends Client {
       return obj.output.call(runner, response);
     }
 
-    const { rows } = response;
+    const { rows, fields } = response;
     switch (method) {
       case "select":
         return rows;
@@ -219,6 +219,11 @@ class Client_Firebird extends Client {
         return rows[0];
       case "pluck":
         return map(rows, obj.pluck);
+      case "insert":
+        return Object.defineProperties(rows.slice(), {
+          rows: { value: rows, enumerable: false },
+          fields: { value: fields, enumerable: false },
+        });
       default:
         return response;
     }

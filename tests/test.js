@@ -11,16 +11,13 @@ const generateConfig = () => ({
     port: 3050,
     username: process.env.ISC_USER || "SYSDBA",
     password: process.env.ISC_PASSWORD || "masterkey",
-    database: path.join(
-      os.tmpdir(),
-      `firebird-knex-dialect-${Date.now()}.fdb`
-    ),
+    database: path.join(os.tmpdir(), `firebird-knex-dialect-${Date.now()}.fdb`),
     lowercase_keys: true,
   },
   pool: { min: 1, max: 1 },
   createDatabaseIfNotExists: true,
   debug: false,
-  libraryPath: process.env.LIBRARY_PATH
+  libraryPath: process.env.LIBRARY_PATH,
 });
 
 describe("Basic operations", () => {
@@ -81,45 +78,67 @@ describe("Basic operations", () => {
   it("Insert data into tables", async () => {
     await new Promise((resolve) =>
       knex.transaction(async (rtx) => {
-        await knex
-          .transacting(rtx)
-          .returning("id")
-          .insert({
+        expect(
+          await knex
+            .transacting(rtx)
+            .returning("id")
+            .insert({
+              id: 1,
+              user_name: "Tomáš 😎",
+              role: "user",
+              binary_data: Buffer.from("Binary data for Tomáš 😎"),
+              status: "A",
+            })
+            .into("users")
+        ).toStrictEqual([
+          {
             id: 1,
-            user_name: "Tomáš 😎",
-            role: "user",
-            binary_data: Buffer.from("Binary data for Tomáš 😎"),
-            status: "A",
-          })
-          .into("users");
+          },
+        ]);
 
-        await knex
-          .transacting(rtx)
-          .returning("user_name")
-          .insert({
-            id: 2,
+        expect(
+          await knex
+            .transacting(rtx)
+            .returning("user_name")
+            .insert({
+              id: 2,
+              user_name: "Adam",
+              role: "user",
+              binary_data: Buffer.from("Binary data for Adam"),
+              status: "B",
+            })
+            .into("users")
+        ).toStrictEqual([
+          {
             user_name: "Adam",
-            role: "user",
-            binary_data: Buffer.from("Binary data for Adam"),
-            status: "B",
-          })
-          .into("users");
-        await knex
-          .transacting(rtx)
-          .returning("role")
-          .insert({
-            id: 3,
-            user_name: "Lucas",
-            role: "user",
-            binary_data: Buffer.from("Binary data for Lucas"),
-            status: "C",
-          })
-          .into("users");
+          },
+        ]);
 
-        await knex
-          .transacting(rtx)
-          .table("accounts")
-          .insert({ id: 101, account_name: "knex", user_id: 1 });
+        expect(
+          await knex
+            .transacting(rtx)
+            .returning(["id", "role"])
+            .insert({
+              id: 3,
+              user_name: "Lucas",
+              role: "user",
+              binary_data: Buffer.from("Binary data for Lucas"),
+              status: "C",
+            })
+            .into("users")
+        ).toStrictEqual([
+          {
+            id: 3,
+            role: "user",
+          },
+        ]);
+
+        expect(
+          await knex
+            .transacting(rtx)
+            .table("accounts")
+            .insert({ id: 101, account_name: "knex", user_id: 1 })
+        ).toStrictEqual([]);
 
         resolve();
       })
