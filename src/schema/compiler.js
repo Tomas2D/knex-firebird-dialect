@@ -2,8 +2,6 @@
 // -------
 import SchemaCompiler from "knex/lib/schema/compiler";
 
-import { some, flatten } from "lodash";
-
 // Schema Compiler
 // -------
 class SchemaCompiler_Firebird extends SchemaCompiler {
@@ -17,9 +15,9 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
       sql,
       output: ({ rows, fields }) => {
         if (!rows || rows.length === 0) {
-          return false
+          return false;
         }
-        const key = fields[0]
+        const key = fields[0];
         return Number(rows[0][key]) === 1;
       },
     });
@@ -36,21 +34,23 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
           tableName.toUpperCase()
         )}'`,
       output({ rows, fields }) {
-        const key = fields[0].trim()
-        const target = column.trim().toLowerCase()
+        const key = fields[0].trim();
+        const target = column.trim().toLowerCase();
         for (const row of rows) {
           if (row[key].trim().toLowerCase() === target) {
-            return true
+            return true;
           }
         }
-        return false
+        return false;
       },
     });
   }
 
   getColumnName() {
-    const name = super.getColumnName(arguments)
-    return this.client.config.connection.lowercase_keys ? name.toLowerCase() : name
+    const name = super.getColumnName(arguments);
+    return this.client.config.connection.lowercase_keys
+      ? name.toLowerCase()
+      : name;
   }
 
   dropTableIfExists(tableName) {
@@ -69,6 +69,7 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
     return this;
   }
 
+  // eslint-disable-next-line no-unused-vars
   renameTable(tableName, to) {
     throw new Error(
       `${this.name} is not implemented for this dialect (http://www.firebirdfaq.org/faq363/).`

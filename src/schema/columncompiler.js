@@ -13,11 +13,13 @@ class ColumnCompiler_Firebird extends ColumnCompiler {
   }
 
   getColumnName() {
-    const name = super.getColumnName(arguments)
+    const name = super.getColumnName(arguments);
     if (!name) {
-      return name
+      return name;
     }
-    return this.client.config.connection.lowercase_keys ? name.toLowerCase() : name
+    return this.client.config.connection.lowercase_keys
+      ? name.toLowerCase()
+      : name;
   }
 }
 

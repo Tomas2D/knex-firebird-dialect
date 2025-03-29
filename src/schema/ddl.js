@@ -13,8 +13,7 @@ import {
   negate,
   isEmpty,
   chunk,
-} from 'lodash';
-
+} from "lodash";
 
 class Firebird_DDL {
   constructor(client, tableCompiler, pragma, connection) {
@@ -22,7 +21,7 @@ class Firebird_DDL {
     this.tableCompiler = tableCompiler;
     this.pragma = pragma;
     this.tableNameRaw = this.tableCompiler.tableNameRaw;
-    this.alteredName = uniqueId('_knex_temp_alter');
+    this.alteredName = uniqueId("_knex_temp_alter");
     this.connection = connection;
     this.formatter =
       client && client.config && client.config.wrapIdentifier
@@ -94,10 +93,7 @@ class Firebird_DDL {
     iterator = iterator || identity;
     const chunked = chunk(result, chunkSize);
     for (const batch of chunked) {
-      await this.trx
-        .queryBuilder()
-        .table(target)
-        .insert(map(batch, iterator));
+      await this.trx.queryBuilder().table(target).insert(map(batch, iterator));
     }
   }
 
@@ -108,14 +104,14 @@ class Firebird_DDL {
   }
 
   _doReplace(sql, from, to) {
-    const oneLineSql = sql.replace(/\s+/g, ' ');
+    const oneLineSql = sql.replace(/\s+/g, " ");
     const matched = oneLineSql.match(/^CREATE TABLE\s+(\S+)\s*\((.*)\)/);
 
     const tableName = matched[1];
     const defs = matched[2];
 
     if (!defs) {
-      throw new Error('No column definitions in this statement!');
+      throw new Error("No column definitions in this statement!");
     }
 
     let parens = 0,
@@ -125,19 +121,19 @@ class Firebird_DDL {
     const x = defs.length;
     for (i = 0; i < x; i++) {
       switch (defs[i]) {
-        case '(':
+        case "(":
           parens++;
           break;
-        case ')':
+        case ")":
           parens--;
           break;
-        case ',':
+        case ",":
           if (parens === 0) {
             args.push(defs.slice(ptr, i));
             ptr = i + 1;
           }
           break;
-        case ' ':
+        case " ":
           if (ptr === i) {
             ptr = i + 1;
           }
@@ -146,21 +142,20 @@ class Firebird_DDL {
     }
     args.push(defs.slice(ptr, i));
 
-    const fromIdentifier = from.replace(/[`"'[\]]/g, '');
+    const fromIdentifier = from.replace(/[`"'[\]]/g, "");
 
     args = args.map((item) => {
-      item = item.trim()
-      let split = item.split(' ');
-
+      item = item.trim();
+      let split = item.split(" ");
 
       const fromMatchCandidates = [
-        new RegExp(`\`${fromIdentifier}\``, 'i'),
-        new RegExp(`"${fromIdentifier}"`, 'i'),
-        new RegExp(`'${fromIdentifier}'`, 'i'),
-        new RegExp(`\\[${fromIdentifier}\\]`, 'i'),
+        new RegExp(`\`${fromIdentifier}\``, "i"),
+        new RegExp(`"${fromIdentifier}"`, "i"),
+        new RegExp(`'${fromIdentifier}'`, "i"),
+        new RegExp(`\\[${fromIdentifier}\\]`, "i"),
       ];
       if (fromIdentifier.match(/^\S+$/)) {
-        fromMatchCandidates.push(new RegExp(`\\b${fromIdentifier}\\b`, 'i'));
+        fromMatchCandidates.push(new RegExp(`\\b${fromIdentifier}\\b`, "i"));
       }
 
       const doesMatchFromIdentifier = (target) =>
@@ -176,9 +171,9 @@ class Firebird_DDL {
         // column definition
         if (to) {
           split[0] = to;
-          return split.join(' ');
+          return split.join(" ");
         }
-        return ''; // for deletions
+        return ""; // for deletions
       }
 
       // skip constraint name
@@ -191,7 +186,7 @@ class Firebird_DDL {
         const ret = item.replace(/\(.*\)/, replaceFromIdentifier);
         // If any member columns are dropped then uniqueness/pk constraint
         // can not be retained
-        if (ret !== item && isEmpty(to)) return '';
+        if (ret !== item && isEmpty(to)) return "";
         return ret;
       }
 
@@ -209,7 +204,7 @@ class Firebird_DDL {
         if (split[0] !== replacedKeySpec) {
           // If we are removing one or more columns of a foreign
           // key, then we should not retain the key at all
-          if (isEmpty(to)) return '';
+          if (isEmpty(to)) return "";
           else split[0] = replacedKeySpec;
         }
 
@@ -222,11 +217,11 @@ class Firebird_DDL {
           if (split[1] !== replacedKeyTargetSpec) {
             // If we are removing one or more columns of a foreign
             // key, then we should not retain the key at all
-            if (isEmpty(to)) return '';
+            if (isEmpty(to)) return "";
             else split[1] = replacedKeyTargetSpec;
           }
         }
-        return split.join(' references ');
+        return split.join(" references ");
       }
 
       return item;
@@ -235,12 +230,12 @@ class Firebird_DDL {
     args = args.filter(negate(isEmpty));
 
     if (args.length === 0) {
-      throw new Error('Unable to drop last column from table');
+      throw new Error("Unable to drop last column from table");
     }
 
     return oneLineSql
-      .replace(/\(.*\)/, () => `(${args.join(', ')})`)
-      .replace(/,\s*([,)])/, '$1');
+      .replace(/\(.*\)/, () => `(${args.join(", ")})`)
+      .replace(/,\s*([,)])/, "$1");
   }
 }
 

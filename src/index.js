@@ -1,4 +1,4 @@
-import {defaults, map, noop} from "lodash";
+import { defaults, map, noop } from "lodash";
 import assert from "assert";
 import Client from "knex/lib/client";
 
@@ -10,23 +10,23 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
-import { isFirebirdConnectionError } from './utils'
-import * as driver from 'node-firebird-driver-native'
+import { isFirebirdConnectionError } from "./utils";
+import * as driver from "node-firebird-driver-native";
 
 class Client_Firebird extends Client {
   constructor(config = {}, ...args) {
     if (!config.connection) {
-      throw new Error('Missing "connection" property in configuration!')
+      throw new Error('Missing "connection" property in configuration!');
     }
 
-    const customConfig = {...config, connection: { ...config.connection}}
+    const customConfig = { ...config, connection: { ...config.connection } };
     if (customConfig.connection.user) {
-      customConfig.connection.username = customConfig.connection.user
-      delete customConfig.connection.user
+      customConfig.connection.username = customConfig.connection.user;
+      delete customConfig.connection.user;
     }
 
     if (!customConfig.connection.database) {
-      throw new Error('Database path/alias is missing!')
+      throw new Error("Database path/alias is missing!");
     }
 
     super(customConfig, ...args);
@@ -71,36 +71,40 @@ class Client_Firebird extends Client {
   async acquireRawConnection() {
     assert(!this._connectionForTransactions);
 
-    const driver = this._driver()
-    const client = driver.createNativeClient(this.config.libraryPath || driver.getDefaultLibraryFilename())
+    const driver = this._driver();
+    const client = driver.createNativeClient(
+      this.config.libraryPath || driver.getDefaultLibraryFilename()
+    );
 
-    const databasePath = this.config.connection.database
+    const databasePath = this.config.connection.database;
     const getConnectionString = () => {
-      const {
-        host,
-        port
-      } = this.config.connection
+      const { host, port } = this.config.connection;
 
-      const target = [host, port].filter(Boolean).join('/')
-      return [target, databasePath].filter(Boolean).join(':')
-    }
+      const target = [host, port].filter(Boolean).join("/");
+      return [target, databasePath].filter(Boolean).join(":");
+    };
 
-    const uri = getConnectionString()
-    const connect = () => client.connect(uri, this.config.connection)
-    const connectWithCreate = () => client.createDatabase(uri, this.config.connection)
+    const uri = getConnectionString();
+    const connect = () => client.connect(uri, this.config.connection);
+    const connectWithCreate = () =>
+      client.createDatabase(uri, this.config.connection);
 
     if (this.config.createDatabaseIfNotExists) {
       try {
-        return await connectWithCreate()
+        return await connectWithCreate();
       } catch (e) {
-        const errMsg = String(e)
-        if (['I/O error during "open O_CREAT"', 'DATABASE is in use'].some(msg => errMsg.includes(msg))) {
-          return await connect()
+        const errMsg = String(e);
+        if (
+          ['I/O error during "open O_CREAT"', "DATABASE is in use"].some(
+            (msg) => errMsg.includes(msg)
+          )
+        ) {
+          return await connect();
         }
-        throw e
+        throw e;
       }
     }
-    return await connect()
+    return await connect();
   }
 
   /**
@@ -108,7 +112,7 @@ class Client_Firebird extends Client {
    * @returns {Promise<unknown>}
    */
   async destroyRawConnection(connection) {
-    await connection.disconnect()
+    await connection.disconnect();
   }
 
   /**
@@ -122,16 +126,16 @@ class Client_Firebird extends Client {
       obj = { sql: obj };
     }
     if (!connection) {
-      throw new Error(`Error calling ${obj.method} on connection.`)
+      throw new Error(`Error calling ${obj.method} on connection.`);
     }
 
     const { sql } = obj;
     if (!sql) {
-      return
+      return;
     }
 
     if (connection._transaction) {
-      throw new Error('this should never happen!')
+      throw new Error("this should never happen!");
     }
 
     let transaction, statement;
@@ -141,55 +145,60 @@ class Client_Firebird extends Client {
       statement = await connection.prepare(transaction, sql);
       let fResponse = {
         rows: [],
-        fields: []
-      }
+        fields: [],
+      };
       if (obj.returning && !statement.hasResultSet) {
-        const response = await statement.executeSingletonAsObject(transaction, obj.bindings)
-        fResponse.rows = [Object.values(response)]
-        fResponse.fields = Object.keys(response)
+        const response = await statement.executeSingletonAsObject(
+          transaction,
+          obj.bindings
+        );
+        fResponse.rows = [Object.values(response)];
+        fResponse.fields = Object.keys(response);
       } else if (statement.hasResultSet) {
-        const response = await statement.executeQuery(transaction, obj.bindings);
+        const response = await statement.executeQuery(
+          transaction,
+          obj.bindings
+        );
         try {
           const [rows, fields] = await Promise.all([
             response.fetch(),
-            statement.columnLabels || []
-          ])
-          fResponse.rows = rows
-          fResponse.fields = fields
+            statement.columnLabels || [],
+          ]);
+          fResponse.rows = rows;
+          fResponse.fields = fields;
         } finally {
-          await response.close()
+          await response.close();
         }
       } else {
-        await statement.execute(transaction, obj.bindings)
+        await statement.execute(transaction, obj.bindings);
       }
 
-
-      await this._fixResponse(fResponse, transaction)
-      await transaction.commit()
+      await this._fixResponse(fResponse, transaction);
+      await transaction.commit();
 
       return {
         ...obj,
-        response: fResponse
-      }
+        response: fResponse,
+      };
     } catch (e) {
       if (transaction) {
         await transaction.rollback().catch(noop);
-        transaction = null
+        transaction = null;
       }
       if (isFirebirdConnectionError(e)) {
-        await this.destroyRawConnection(connection)
+        await this.destroyRawConnection(connection);
       }
-      throw e
+      throw e;
     } finally {
       if (statement) {
         await statement.dispose().catch(noop);
-        statement = null
+        statement = null;
       }
     }
   }
 
   _stream() {
-     throw new Error("_stream not implemented");
+    throw new Error("_stream not implemented");
   }
 
   // Ensures the response is returned in the same format as other clients.
@@ -216,36 +225,38 @@ class Client_Firebird extends Client {
   }
 
   async _fixResponse(obj, transaction) {
-    const { rows, fields } = obj
+    const { rows, fields } = obj;
     if (this.config.connection.lowercase_keys) {
-      const newFields = fields.map(field => field.toLowerCase())
-      fields.length = 0
-      fields.push(...newFields)
+      const newFields = fields.map((field) => field.toLowerCase());
+      fields.length = 0;
+      fields.push(...newFields);
     }
 
     const blobs = [];
     for (let i = 0; i < rows.length; i++) {
-      const row = {}
+      const row = {};
       fields.forEach((key, index) => {
-        const value = rows[i][index]
+        const value = rows[i][index];
         if (value instanceof this._driver().Blob) {
           blobs.push(
-            value.attachment.openBlob(transaction, value).then(async (stream) => {
-              const buffer = Buffer.alloc(await stream.length)
-              await stream.read(buffer)
-              row[key] = buffer
-            })
-          )
+            value.attachment
+              .openBlob(transaction, value)
+              .then(async (stream) => {
+                const buffer = Buffer.alloc(await stream.length);
+                await stream.read(buffer);
+                row[key] = buffer;
+              })
+          );
         } else {
-          row[key] = value
+          row[key] = value;
         }
-      })
-      rows[i] = row
+      });
+      rows[i] = row;
     }
 
     await Promise.all(blobs);
 
-    return obj
+    return obj;
   }
 
   /**
@@ -253,7 +264,7 @@ class Client_Firebird extends Client {
    * @returns {boolean}
    */
   validateConnection(db) {
-    return db.isValid
+    return db.isValid;
   }
 
   poolDefaults() {

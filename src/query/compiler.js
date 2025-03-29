@@ -1,7 +1,7 @@
 // Firebird Query Builder & Compiler
 import QueryCompiler from "knex/lib/query/querycompiler";
-const identity = require('lodash/identity');
-const reduce = require('lodash/reduce');
+const identity = require("lodash/identity");
+const reduce = require("lodash/reduce");
 
 class QueryCompiler_Firebird extends QueryCompiler {
   columns() {
@@ -61,7 +61,7 @@ class QueryCompiler_Firebird extends QueryCompiler {
   }
 
   truncate() {
-    throw new Error('Truncate SQL command does not exists in Firebird.')
+    throw new Error("Truncate SQL command does not exists in Firebird.");
   }
 
   insert() {
@@ -84,12 +84,12 @@ class QueryCompiler_Firebird extends QueryCompiler {
   _prepInsert(insertValues) {
     if (Array.isArray(insertValues)) {
       if (insertValues.length !== 1) {
-        throw new Error('Firebird does not support multiple insertions.')
+        throw new Error("Firebird does not support multiple insertions.");
       }
-      insertValues = insertValues[0]
+      insertValues = insertValues[0];
     }
 
-    const newValue = {}
+    const newValue = {};
     for (const key in insertValues) {
       if (Object.prototype.hasOwnProperty.call(insertValues, key)) {
         const value = insertValues[key];
@@ -107,12 +107,9 @@ class QueryCompiler_Firebird extends QueryCompiler {
     // The user may have specified a custom wrapIdentifier function in the config. We
     // need to run the identifiers through that function, but not format them as
     // identifiers otherwise.
-    const table = this.client.customWrapIdentifier(
-      this.single.table,
-      identity
-    );
+    const table = this.client.customWrapIdentifier(this.single.table, identity);
 
-    const self = this
+    const self = this;
     return {
       sql: `
       select 
@@ -129,11 +126,13 @@ class QueryCompiler_Firebird extends QueryCompiler {
         const result = reduce(
           rows,
           function (columns, value) {
-            const name = self.getColumnName(value[self.getColumnName('name')].trim());
+            const name = self.getColumnName(
+              value[self.getColumnName("name")].trim()
+            );
 
             columns[name] = {
-              type: value[self.getColumnName('type')].trim().toLowerCase(),
-              nullable: !value[self.getColumnName('not_null')],
+              type: value[self.getColumnName("type")].trim().toLowerCase(),
+              nullable: !value[self.getColumnName("not_null")],
             };
 
             if (value.MAX_LENGTH) {
@@ -146,7 +145,7 @@ class QueryCompiler_Firebird extends QueryCompiler {
         );
 
         if (column && !result[column]) {
-          throw new Error(`Specified column "${column}" was not found!`)
+          throw new Error(`Specified column "${column}" was not found!`);
         }
         return column ? result[column] : result;
       },
@@ -155,9 +154,11 @@ class QueryCompiler_Firebird extends QueryCompiler {
 
   getColumnName(name) {
     if (!name) {
-      return name
+      return name;
     }
-    return this.client.config.connection.lowercase_keys ? name.toLowerCase() : name
+    return this.client.config.connection.lowercase_keys
+      ? name.toLowerCase()
+      : name;
   }
 }
 

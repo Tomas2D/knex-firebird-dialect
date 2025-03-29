@@ -7,13 +7,13 @@ class Transaction_Firebird extends Transaction {
    */
   async begin(conn) {
     const transaction = await conn.startTransaction({
-      isolation: this.isolationLevel || 'READ_COMMITTED',
+      isolation: this.isolationLevel || "READ_COMMITTED",
       ...(this.readOnly && {
-        accessMode: 'READ_ONLY'
-      })
-    })
-    this._transaction = transaction
-    return transaction
+        accessMode: "READ_ONLY",
+      }),
+    });
+    this._transaction = transaction;
+    return transaction;
   }
 
   savepoint() {
@@ -25,17 +25,17 @@ class Transaction_Firebird extends Transaction {
   }
 
   async commit(conn, value) {
-    this._completed = true
-    await this._transaction.commit()
+    this._completed = true;
+    await this._transaction.commit();
     this._resolver(value);
   }
 
   async rollback(conn, error) {
-    this._completed = true
+    this._completed = true;
     if (error) {
       this._rejecter(error);
     } else {
-      await this._transaction.rollback()
+      await this._transaction.rollback();
       this._resolver();
     }
   }
