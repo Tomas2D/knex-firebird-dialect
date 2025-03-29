@@ -1,5 +1,21 @@
 # Changelog
 
+<a name="2.1.3"></a>
+## 2.1.3 (2025-03-29)
+
+### Fixed
+
+-  🐛 return an array instead of the object for the &quot;insert&quot; method [[9ded650](https://github.com/Tomas2D/knex-firebird-dialect/commit/9ded6508b652d87e5a9ce792be96e7b1369b3c06)]
+
+### Miscellaneous
+
+-  chore: update package.json [[6229f9e](https://github.com/Tomas2D/knex-firebird-dialect/commit/6229f9e5c068eb3085881adfc55c92765e74531c)]
+-  chore: reformat files [[b277b73](https://github.com/Tomas2D/knex-firebird-dialect/commit/b277b739d2644914b01084bb42455226611684e1)]
+-  chore: update package.json [[0976c52](https://github.com/Tomas2D/knex-firebird-dialect/commit/0976c5284c73d0facb329107a8a0159b2db9a575)]
+-  chore(deps): update node-firebird-driver-native [[4ebe339](https://github.com/Tomas2D/knex-firebird-dialect/commit/4ebe3397049e222ae77b2a8060920f76d466ace8)]
+-  ci: update firebird installation [[bd270a9](https://github.com/Tomas2D/knex-firebird-dialect/commit/bd270a9c2927868626ec23789779927c4aec7839)]
+
+
 <a name="2.1.2"></a>
 ## 2.1.2 (2025-01-25)
 
