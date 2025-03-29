@@ -1,7 +1,4 @@
 {
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
-}
-lect for Firebird",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
@@ -23,6 +20,7 @@ lect for Firebird",
   "author": "Tomáš Dvořák <toomas2d@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/Tomas2D/knex-firebird-dialect#readme",
+  "description": "Firebird dialect for Knex.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tomas2D/knex-firebird-dialect.git"
