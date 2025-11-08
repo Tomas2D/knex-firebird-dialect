@@ -268,8 +268,20 @@ class Client_Firebird extends Client {
    * @param {import('node-firebird-driver-native').Attachment} db
    * @returns {boolean}
    */
-  validateConnection(db) {
-    return db.isValid;
+  async validateConnection(db) {
+    if (!db.isValid) {
+      return false;
+    }
+
+    try {
+      await db.client.statusAction((status) => {
+        return db.attachmentHandle.pingAsync(status);
+      });
+      return true;
+    } catch {
+      await this.destroyRawConnection(db).catch(noop);
+      return false;
+    }
   }
 
   poolDefaults() {
