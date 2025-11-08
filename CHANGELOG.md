@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="2.1.4"></a>
+## 2.1.4 (2025-11-08)
+
+### Added
+
+-  ✨ Use fb ping to validate given connection [[95184d0](https://github.com/Tomas2D/knex-firebird-dialect/commit/95184d00f0d562bb5db129032abe78cb99053489)]
+
+### Miscellaneous
+
+-  chore: bump nodejs version [[b760eab](https://github.com/Tomas2D/knex-firebird-dialect/commit/b760eabc1ee62aafcfa9c27cbf2c4f862b201bcb)]
+
+
 <a name="2.1.3"></a>
 ## 2.1.3 (2025-03-29)
 
