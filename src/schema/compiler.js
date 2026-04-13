@@ -25,23 +25,19 @@ class SchemaCompiler_Firebird extends SchemaCompiler {
 
   // Compile the query to determine if a column exists.
   hasColumn(tableName, column) {
+    if (!tableName || !column) {
+      throw new Error("hasColumn requires both tableName and column arguments");
+    }
+    const table = this.formatter.wrap(tableName.toUpperCase());
+    const field = column.trim().toUpperCase();
     this.pushQuery({
       sql:
-        `select i.rdb$field_name as "field" from ` +
-        `rdb$relations r join rdb$RELATION_FIELDS i ` +
-        `on (i.rdb$relation_name = r.rdb$relation_name) ` +
-        `where r.rdb$relation_name = '${this.formatter.wrap(
-          tableName.toUpperCase()
-        )}'`,
-      output({ rows, fields }) {
-        const key = fields[0].trim();
-        const target = column.trim().toLowerCase();
-        for (const row of rows) {
-          if (row[key].trim().toLowerCase() === target) {
-            return true;
-          }
-        }
-        return false;
+        `select 1 from rdb$relations r ` +
+        `join rdb$relation_fields i on (i.rdb$relation_name = r.rdb$relation_name) ` +
+        `where r.rdb$relation_name = '${table}' ` +
+        `and trim(i.rdb$field_name) = '${field}'`,
+      output({ rows }) {
+        return rows.length > 0;
       },
     });
   }
