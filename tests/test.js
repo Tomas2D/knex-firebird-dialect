@@ -302,6 +302,177 @@ describe("Basic operations", () => {
   });
 });
 
+describe("hasTable / hasColumn", () => {
+  let knex;
+  const knexConfig = generateConfig();
+
+  beforeAll(async () => {
+    knex = knexLib(knexConfig);
+    await knex.schema.createTable("ht_test", (table) => {
+      table.increments("id").primary();
+      table.string("name", 100).notNullable();
+      table.integer("age").nullable();
+    });
+  });
+
+  afterAll(async () => {
+    await knex.schema.dropTableIfExists("ht_test");
+    await knex.destroy();
+    await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
+  });
+
+  describe("hasTable", () => {
+    it("returns true for an existing table", async () => {
+      await expect(knex.schema.hasTable("ht_test")).resolves.toBe(true);
+    });
+
+    it("returns false for a non-existing table", async () => {
+      await expect(knex.schema.hasTable("no_such_table")).resolves.toBe(false);
+    });
+
+    it("is case-insensitive (lowercase input)", async () => {
+      await expect(knex.schema.hasTable("ht_test")).resolves.toBe(true);
+    });
+
+    it("is case-insensitive (uppercase input)", async () => {
+      await expect(knex.schema.hasTable("HT_TEST")).resolves.toBe(true);
+    });
+  });
+
+  describe("hasColumn", () => {
+    it("returns true for an existing column", async () => {
+      await expect(knex.schema.hasColumn("ht_test", "name")).resolves.toBe(true);
+    });
+
+    it("returns true for a primary key column", async () => {
+      await expect(knex.schema.hasColumn("ht_test", "id")).resolves.toBe(true);
+    });
+
+    it("returns true for a nullable column", async () => {
+      await expect(knex.schema.hasColumn("ht_test", "age")).resolves.toBe(true);
+    });
+
+    it("returns false for a non-existing column", async () => {
+      await expect(knex.schema.hasColumn("ht_test", "no_such_col")).resolves.toBe(false);
+    });
+
+    it("returns false when table does not exist", async () => {
+      await expect(knex.schema.hasColumn("no_such_table", "id")).resolves.toBe(false);
+    });
+
+    it("is case-insensitive for column name", async () => {
+      await expect(knex.schema.hasColumn("ht_test", "NAME")).resolves.toBe(true);
+      await expect(knex.schema.hasColumn("ht_test", "Name")).resolves.toBe(true);
+    });
+
+    it("is case-insensitive for table name", async () => {
+      await expect(knex.schema.hasColumn("HT_TEST", "name")).resolves.toBe(true);
+    });
+
+    it("throws when tableName is missing", async () => {
+      await expect(knex.schema.hasColumn(null, "name")).rejects.toThrow(
+        "hasColumn requires both tableName and column arguments"
+      );
+    });
+
+    it("throws when column is missing", async () => {
+      await expect(knex.schema.hasColumn("ht_test", null)).rejects.toThrow(
+        "hasColumn requires both tableName and column arguments"
+      );
+    });
+  });
+});
+
+describe("SQL Injection", () => {
+  let knex;
+  const knexConfig = generateConfig();
+
+  beforeAll(async () => {
+    knex = knexLib(knexConfig);
+    await knex.schema.createTable("sqli_test", (table) => {
+      table.string("payload", 200).nullable();
+    });
+  });
+
+  afterAll(async () => {
+    await knex.schema.dropTableIfExists("sqli_test");
+    await knex.destroy();
+    await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
+  });
+
+  describe("hasTable", () => {
+    it("does not find a table when name contains SQL injection payload", async () => {
+      await expect(
+        knex.schema.hasTable("sqli_test' OR '1'='1")
+      ).resolves.toBe(false);
+    });
+
+    it("does not find a table with UNION injection payload", async () => {
+      await expect(
+        knex.schema.hasTable("sqli_test' UNION SELECT 1 FROM RDB$DATABASE --")
+      ).resolves.toBe(false);
+    });
+
+    it("does not find a table with comment injection payload", async () => {
+      await expect(
+        knex.schema.hasTable("sqli_test'--")
+      ).resolves.toBe(false);
+    });
+  });
+
+  describe("hasColumn", () => {
+    it("does not find a column when name contains SQL injection payload", async () => {
+      await expect(
+        knex.schema.hasColumn("sqli_test", "id' OR '1'='1")
+      ).resolves.toBe(false);
+    });
+
+    it("does not find a column with UNION injection payload", async () => {
+      await expect(
+        knex.schema.hasColumn("sqli_test", "id' UNION SELECT 1 FROM RDB$DATABASE --")
+      ).resolves.toBe(false);
+    });
+
+    it("does not find a column when table name contains injection payload", async () => {
+      await expect(
+        knex.schema.hasColumn("sqli_test' OR '1'='1", "id")
+      ).resolves.toBe(false);
+    });
+
+  });
+
+  describe("dropTableIfExists", () => {
+    it("throws on invalid identifier with injection payload", async () => {
+      await expect(
+        knex.schema.dropTableIfExists("sqli_test; DROP TABLE sqli_test2 --")
+      ).rejects.toThrow("Invalid identifier");
+    });
+
+    it("throws on identifier with quote injection", async () => {
+      await expect(
+        knex.schema.dropTableIfExists("sqli_test' OR '1'='1")
+      ).rejects.toThrow("Invalid identifier");
+    });
+  });
+
+  describe("data binding (insert/select)", () => {
+    it("stores and retrieves SQL injection string as plain data", async () => {
+      const injected = "'; DROP TABLE sqli_test; --";
+      await knex("sqli_test").insert({ payload: injected });
+      const rows = await knex("sqli_test").where({ payload: injected }).select("payload");
+      expect(rows).toHaveLength(1);
+      expect(rows[0].payload).toBe(injected);
+    });
+
+    it("does not return rows for injected WHERE condition", async () => {
+      const rows = await knex("sqli_test")
+        .whereRaw("payload = ?", ["nonexistent' OR '1'='1"])
+        .select("payload");
+      expect(rows).toHaveLength(0);
+    });
+  });
+});
+
 describe("DDL", () => {
   let knex;
   const tableName = "ddl";
