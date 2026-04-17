@@ -77,6 +77,16 @@ class QueryCompiler_Firebird extends QueryCompiler {
     };
   }
 
+  del() {
+    let sql = super.del();
+    if (sql === "") return sql;
+
+    const { returning } = this.single;
+    if (returning) sql += this._returning(returning);
+
+    return { sql, returning };
+  }
+
   _returning(value) {
     return value ? ` returning ${this.formatter.columnize(value)}` : "";
   }
