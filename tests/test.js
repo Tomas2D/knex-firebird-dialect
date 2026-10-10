@@ -162,6 +162,39 @@ describe("Basic operations", () => {
     `);
   });
 
+  it("Raw queries with RETURNING", async () => {
+    await knex.schema.createTable("returning_test", (table) => {
+      table.integer("id").primary();
+      table.integer("counter");
+    });
+
+    try {
+      const inserted = await knex.raw(
+        "insert into returning_test (id, counter) values (?, ?) returning id, counter",
+        [1, 1]
+      );
+      expect(inserted.rows).toStrictEqual([{ id: 1, counter: 1 }]);
+
+      const updated = await knex.raw(
+        "update returning_test set counter = counter + 1 where id = ? returning counter",
+        [1]
+      );
+      expect(updated.rows).toStrictEqual([{ counter: 2 }]);
+
+      const withoutReturning = await knex.raw(
+        "update returning_test set counter = counter + 1 where id = ?",
+        [1]
+      );
+      expect(withoutReturning.rows).toStrictEqual([]);
+
+      expect(await knex("returning_test").select("counter")).toStrictEqual([
+        { counter: 3 },
+      ]);
+    } finally {
+      await knex.schema.dropTable("returning_test");
+    }
+  });
+
   it("Sorting", async () => {
     await expect(knex.distinct("id").from("users").orderBy("id", "desc"))
       .resolves.toMatchInlineSnapshot(`
