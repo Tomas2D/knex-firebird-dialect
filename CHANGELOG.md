@@ -1,5 +1,21 @@
 # Changelog
 
+<a name="2.1.5"></a>
+## 2.1.5 (2026-10-22)
+
+### Added
+
+-  ✨ Support query cancellation and bound the connection ping [[376e4b5](https://github.com/Tomas2D/knex-firebird-dialect/commit/376e4b575e75744d5210617a09abab46f718f755)]
+
+### Fixed
+
+-  🐛 Always roll back the Firebird transaction when a knex transaction fails [[c7b4af9](https://github.com/Tomas2D/knex-firebird-dialect/commit/c7b4af9bc76b0f902563260ff3d071c5e266b1d3)]
+
+### Miscellaneous
+
+-  chore(deps): bump node-firebird-driver-native from 3.2.2 to 3.3.0 [[fca4711](https://github.com/Tomas2D/knex-firebird-dialect/commit/fca4711590325ac02252684f115e1bcbd2677994)]
+
+
 <a name="2.1.4"></a>
 ## 2.1.4 (2025-11-08)
 
