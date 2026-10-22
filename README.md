@@ -41,8 +41,16 @@ const knexConfig = {
     lowercase_keys: true,
   },
   createDatabaseIfNotExists: true,
+  pingTimeout: 3000, // optional, max time (ms) to validate a pooled connection
+  cancelTimeout: 5000, // optional, max time (ms) for a cancelled query to finish
   debug: false,
 };
+```
+
+Long-running queries (including ones waiting on a lock) can be cancelled with Knex's timeout.
+
+```javascript
+await knex.raw("EXECUTE PROCEDURE SLOW_ONE").timeout(30_000, { cancel: true });
 ```
 
 **Notice**: if you using CommonJS require, do not forget to use the default import. `const knexFirebirdDialect = require("knex-firebird-dialect").default`;
