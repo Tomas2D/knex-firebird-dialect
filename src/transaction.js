@@ -32,10 +32,19 @@ class Transaction_Firebird extends Transaction {
 
   async rollback(conn, error) {
     this._completed = true;
+    // Always end the Firebird transaction, otherwise it stays open on the attachment
+    // (holding its locks and the OIT) until the connection is destroyed
+    try {
+      await this._transaction?.rollback();
+    } catch (rollbackError) {
+      if (!error) {
+        this._rejecter(rollbackError);
+        return;
+      }
+    }
     if (error) {
       this._rejecter(error);
     } else {
-      await this._transaction.rollback();
       this._resolver();
     }
   }
