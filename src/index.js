@@ -10,8 +10,15 @@ import Transaction from "./transaction";
 import SchemaCompiler from "./schema/compiler";
 import Firebird_Formatter from "./formatter";
 import Firebird_DDL from "./schema/ddl";
-import { isFirebirdConnectionError } from "./utils";
+import {
+  isFirebirdConnectionError,
+  isFirebirdFeatureNotSupportedError,
+  withTimeout,
+} from "./utils";
 import * as driver from "node-firebird-driver-native";
+
+const DEFAULT_PING_TIMEOUT_MS = 3000;
+const DEFAULT_CANCEL_TIMEOUT_MS = 5000;
 
 class Client_Firebird extends Client {
   constructor(config = {}, ...args) {
@@ -122,6 +129,27 @@ class Client_Firebird extends Client {
    * @private
    */
   async _query(connection, obj) {
+    // Kept on the connection so that cancelQuery() can wait until it settles
+    const pending = this._execute(connection, obj);
+    if (connection) {
+      connection.__knex__activeQuery = pending;
+    }
+    try {
+      return await pending;
+    } finally {
+      if (connection?.__knex__activeQuery === pending) {
+        connection.__knex__activeQuery = undefined;
+      }
+    }
+  }
+
+  /**
+   * @param {import('node-firebird-driver-native').Attachment} connection
+   * @param obj
+   * @returns {Promise<unknown>}
+   * @private
+   */
+  async _execute(connection, obj) {
     if (!obj || typeof obj === "string") {
       obj = { sql: obj };
     }
@@ -272,15 +300,47 @@ class Client_Firebird extends Client {
     if (!db.isValid) {
       return false;
     }
+    if (db.__knex__pingUnsupported) {
+      return true;
+    }
 
     try {
-      await db.client.statusAction((status) => {
-        return db.attachmentHandle.pingAsync(status);
-      });
+      // A ping over a half-open TCP connection may block until the OS gives up (minutes),
+      // so do not let it hold the pool slot that long. The pool destroys rejected connections.
+      await withTimeout(
+        db.client.statusAction((status) =>
+          db.attachmentHandle.pingAsync(status)
+        ),
+        this.config.pingTimeout ?? DEFAULT_PING_TIMEOUT_MS,
+        "Firebird ping timed out"
+      );
       return true;
-    } catch {
-      await this.destroyRawConnection(db).catch(noop);
+    } catch (e) {
+      if (isFirebirdFeatureNotSupportedError(e)) {
+        // Server older than Firebird 3.0, ping is not available
+        db.__knex__pingUnsupported = true;
+        return true;
+      }
       return false;
+    }
+  }
+
+  /**
+   * Called by knex when a query with `.timeout(ms, { cancel: true })` exceeds its timeout.
+   * Interrupts the running statement (including lock waits) and waits until it unwinds,
+   * so the connection is returned to the pool idle. If cancelling fails, knex disposes the connection.
+   *
+   * @param {import('node-firebird-driver-native').Attachment} connection
+   */
+  async cancelQuery(connection) {
+    const activeQuery = connection.__knex__activeQuery;
+    await connection.cancelOperation(false);
+    if (activeQuery) {
+      await withTimeout(
+        activeQuery.catch(noop),
+        this.config.cancelTimeout ?? DEFAULT_CANCEL_TIMEOUT_MS,
+        "Cancelled Firebird query did not finish in time"
+      );
     }
   }
 
@@ -297,6 +357,7 @@ class Client_Firebird extends Client {
 Object.assign(Client_Firebird.prototype, {
   dialect: "firebird",
   driverName: "node-firebird-driver-native",
+  canCancelQuery: true,
 
   Firebird_Formatter,
 });

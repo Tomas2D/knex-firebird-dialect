@@ -32,3 +32,19 @@ export function isFirebirdConnectionError(error) {
     msg.includes(err)
   );
 }
+
+// Raised by the client library when the server does not implement an API call,
+// e.g. IAttachment::ping against a Firebird 2.5 server (needs wire protocol 13)
+export function isFirebirdFeatureNotSupportedError(error) {
+  return String(error).includes("feature is not supported");
+}
+
+export function withTimeout(promise, ms, message) {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(message)), ms);
+    }),
+  ]).finally(() => clearTimeout(timer));
+}

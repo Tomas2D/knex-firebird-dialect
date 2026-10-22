@@ -368,3 +368,90 @@ describe("DDL", () => {
     expect(await knex.schema.hasColumn(tableName, "tmp")).toBe(false);
   });
 });
+
+describe("Connection lifecycle", () => {
+  let knex;
+  const knexConfig = {
+    ...generateConfig(),
+    pool: { min: 1, max: 2 },
+  };
+  knexConfig.connection.database = knexConfig.connection.database.replace(
+    ".fdb",
+    "-lifecycle.fdb"
+  );
+
+  // Every query runs in its own Firebird transaction, so 1 means nothing leaked
+  // (system attachments such as the garbage collector are excluded)
+  const countOpenTransactions = async () => {
+    const {
+      rows: [{ cnt }],
+    } = await knex.raw(
+      "SELECT COUNT(*) AS cnt FROM MON$TRANSACTIONS t" +
+        " JOIN MON$ATTACHMENTS a ON a.MON$ATTACHMENT_ID = t.MON$ATTACHMENT_ID" +
+        " WHERE a.MON$SYSTEM_FLAG = 0"
+    );
+    return Number(cnt);
+  };
+
+  beforeAll(async () => {
+    knex = knexLib(knexConfig);
+    await knex.schema.createTable("locks", (table) => {
+      table.integer("id").primary();
+      table.integer("val");
+    });
+    await knex.insert({ id: 1, val: 0 }).into("locks");
+  });
+
+  afterAll(async () => {
+    await knex.destroy();
+    await fs.promises.unlink(knexConfig.connection.database).catch(() => {});
+  });
+
+  it("Failed transaction does not leave a Firebird transaction open", async () => {
+    await expect(
+      knex.transaction(async () => {
+        throw new Error("boom");
+      })
+    ).rejects.toThrow("boom");
+
+    expect(await countOpenTransactions()).toBe(1);
+  });
+
+  it("Validates pooled connections", async () => {
+    const connection = await knex.client.acquireConnection();
+    try {
+      expect(await knex.client.validateConnection(connection)).toBe(true);
+    } finally {
+      await knex.client.releaseConnection(connection);
+    }
+  });
+
+  it("Cancels a query waiting on a lock", async () => {
+    const holder = await knex.client.acquireConnection();
+    const lockTransaction = await holder.startTransaction();
+    try {
+      await holder.execute(
+        lockTransaction,
+        "UPDATE locks SET val = 1 WHERE id = 1"
+      );
+
+      const startedAt = Date.now();
+      await expect(
+        knex
+          .raw("UPDATE locks SET val = 2 WHERE id = 1")
+          .timeout(500, { cancel: true })
+      ).rejects.toThrow("Defined query timeout of 500ms exceeded");
+      expect(Date.now() - startedAt).toBeLessThan(5000);
+    } finally {
+      await lockTransaction.rollback();
+      await knex.client.releaseConnection(holder);
+    }
+
+    // The cancelled connection is back in the pool and usable
+    await knex.raw("UPDATE locks SET val = 3 WHERE id = 1");
+    const {
+      rows: [{ val }],
+    } = await knex.raw("SELECT val FROM locks WHERE id = 1");
+    expect(val).toBe(3);
+  });
+});
