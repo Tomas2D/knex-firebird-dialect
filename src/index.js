@@ -217,7 +217,6 @@ class Client_Firebird extends Client {
     } catch (e) {
       if (transaction) {
         await transaction.rollback().catch(noop);
-        transaction = null;
       }
       if (isFirebirdConnectionError(e)) {
         await this.destroyRawConnection(connection);
@@ -226,7 +225,6 @@ class Client_Firebird extends Client {
     } finally {
       if (statement) {
         await statement.dispose().catch(noop);
-        statement = null;
       }
     }
   }

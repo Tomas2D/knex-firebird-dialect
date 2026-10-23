@@ -117,7 +117,7 @@ class Firebird_DDL {
     let parens = 0,
       args = [],
       ptr = 0;
-    let i = 0;
+    let i;
     const x = defs.length;
     for (i = 0; i < x; i++) {
       switch (defs[i]) {
