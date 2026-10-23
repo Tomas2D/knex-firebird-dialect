@@ -309,6 +309,28 @@ describe("Basic operations", () => {
     await expect(knex.schema.hasTable("users")).resolves.toBe(false);
   });
 
+  it("Reads blobs spanning multiple segments", async () => {
+    await knex.schema.createTable("blob_test", (table) => {
+      table.integer("id").primary();
+      table.binary("data");
+    });
+
+    try {
+      // Larger than a single blob segment (64KB)
+      const data = Buffer.alloc(256 * 1024);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (i % 251) + 1;
+      }
+      await knex("blob_test").insert({ id: 1, data });
+
+      const row = await knex("blob_test").first("data");
+      expect(row.data.length).toBe(data.length);
+      expect(row.data.equals(data)).toBe(true);
+    } finally {
+      await knex.schema.dropTable("blob_test");
+    }
+  });
+
   it("Transaction - not implemented parts", (done) => {
     knex.transaction((rtx) => {
       expect(rtx.savepoint).rejects.toThrow(

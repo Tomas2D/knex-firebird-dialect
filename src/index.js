@@ -282,7 +282,16 @@ class Client_Firebird extends Client {
               .openBlob(transaction, value)
               .then(async (stream) => {
                 const buffer = Buffer.alloc(await stream.length);
-                await stream.read(buffer);
+                // read() returns at most one blob segment per call, so keep
+                // reading until the buffer is full or the stream ends
+                let offset = 0;
+                while (offset < buffer.length) {
+                  const bytesRead = await stream.read(buffer.subarray(offset));
+                  if (bytesRead <= 0) {
+                    break;
+                  }
+                  offset += bytesRead;
+                }
                 row[key] = buffer;
               })
           );
