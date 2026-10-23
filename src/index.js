@@ -175,7 +175,13 @@ class Client_Firebird extends Client {
         rows: [],
         fields: [],
       };
-      if (obj.returning && !statement.hasResultSet) {
+      // Statements such as `UPDATE ... RETURNING` have output columns but no
+      // cursor. Knex only sets `obj.returning` for builder queries, so also
+      // detect them from the prepared statement to support `knex.raw(...)`.
+      if (
+        !statement.hasResultSet &&
+        (obj.returning || (await statement.columnLabels).length > 0)
+      ) {
         const response = await statement.executeSingletonAsObject(
           transaction,
           obj.bindings
