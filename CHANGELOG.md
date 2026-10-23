@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="2.1.6"></a>
+## 2.1.6 (2026-10-23)
+
+### Fixed
+
+-  🐛 Return rows for raw queries with RETURNING [[358915f](https://github.com/Tomas2D/knex-firebird-dialect/commit/358915f21294f4ecd63e85cc7d0851ba05a97b82)]
+-  🐛 Read blobs spanning multiple segments in full [[1cf5c0f](https://github.com/Tomas2D/knex-firebird-dialect/commit/1cf5c0f82ebf5a62e1e84d4bd3dc5a9ac9f76496)]
+
+### Miscellaneous
+
+-  chore(deps): bump dependencies [[7a71fac](https://github.com/Tomas2D/knex-firebird-dialect/commit/7a71fac97a7f9e93a8895b2d9ff0f5e7ad719d00)]
+
+
 <a name="2.1.5"></a>
 ## 2.1.5 (2026-10-22)
 

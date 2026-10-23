@@ -1,6 +1,6 @@
 {
   "name": "knex-firebird-dialect",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
