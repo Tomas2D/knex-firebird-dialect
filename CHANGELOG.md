@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="2.1.7"></a>
+## 2.1.7 (2026-10-23)
+
+### Fixed
+
+-  🐛 Restore node-firebird-driver-native as a runtime dependency [[ed9fe8a](https://github.com/Tomas2D/knex-firebird-dialect/commit/ed9fe8a5f2ea34f39c1138d1a86ba2509204833b)]
+
+
 <a name="2.1.6"></a>
 ## 2.1.6 (2026-10-23)
 
