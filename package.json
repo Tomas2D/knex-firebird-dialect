@@ -31,7 +31,7 @@
     "url": "https://github.com/Tomas2D/knex-firebird-dialect/issues"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.2",
+    "@babel/runtime": "^8.0.7",
     "lodash": "^4.17.21",
     "node-firebird-driver-native": "^3.1.2"
   },
